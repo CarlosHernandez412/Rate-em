@@ -1,0 +1,95 @@
+html,body,h1,h2,h3,h4,h5,h6 {
+    font-family: "Roboto", sans-serif;
+  }
+  .w3-sidebar {
+    z-index: 3;
+    width: 250px;
+    top: 43px;
+    bottom: 0;
+    height: inherit;
+  }
+  .img1 {
+    background-image: url("../images/homeimg.jpeg");
+    opacity: 0.7;
+    height: 400px;
+    width: auto;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 95%;
+  }
+  .txtcolor {
+    color: #236c93;
+  }
+  
+input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+  }
+  
+  input[type=text]:focus {
+    border: 3px solid #555;
+  }
+  .btn {
+      border: none;
+      outline: none;
+      padding: 12px 16px;
+      background-color: white;
+      cursor: pointer;
+  }
+  .btn:hover{
+      background-color: lightblue;
+   }
+   .btn:active{
+       background-color: black;
+       color: white;
+   }
+
+   /* Dropdown Button */
+  .dropbtn {
+    background-color: white;
+    padding: 16px;
+    border: none;
+  }
+  
+  .dropbtn:hover, .dropbtn:focus {
+    background-color: lightblue;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropdown Content */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f6f6f6;
+    min-width: 230px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    z-index: 1;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  /* Change color of dropdown links on hover */
+  .dropdown a:hover {background-color: #f1f1f1}
+
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {display: block;}
+  
+  /* Show the dropdown menu
+  .show {display: block;}
