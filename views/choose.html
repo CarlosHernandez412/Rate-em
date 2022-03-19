@@ -13,16 +13,15 @@
     h1 {
         text-align: center;
         align-items: center;
-        color: #3dbaff;
-        height: 100px;
+        color:whitesmoke;
+        margin: 65px 1px 8px;
         z-index: -1;
     }
 
     h3 {
+        color:whitesmoke;
         text-align: center;
         align-items: center;
-        color: #3dbaff;
-        height: 50px;
     }
     
     .split {
@@ -38,14 +37,15 @@
     .left {
         left: 0;
         height: 100%;
-        background-color: rgb(41, 43, 41);
-        color: #3dbaff;
+        color: whitesmoke;
+        background-image: linear-gradient(to top, black, #3dbaff);
     }
 
     .right {
         right: 0;
-        background-color: #236c93;
-        color: #3dbaff
+        height: 100%;
+        color: whitesmoke;
+        background-image: linear-gradient(to bottom, black, #3dbaff);
     }
 
     .centered {
@@ -54,6 +54,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         text-align: center;
+        height: 150px;
     }
 
     .centered img {
@@ -61,8 +62,8 @@
         flex-flow: row wrap;
         justify-content: center;
         align-items: center;
-        width: 100%;
-        height: auto; 
+        width: auto;
+        height: 190px; 
         z-index: -1;
 
     }
@@ -102,7 +103,7 @@
             <div class ="w3-text-whitesmoke">
                 <!--h3 disappears, fix it later-->
                 <h1>WELCOME TO RATE 'EM</h1>
-                <h3>REGISTER AS A LANDLORD OR AS A TENANT</h3>
+                <h3 height="100px">REGISTER AS A LANDLORD OR AS A TENANT</h3>
             </div>
         </div>
 
@@ -111,17 +112,17 @@
             <div class="centered img">
                 <img src="../images/landlord.png" alt="landlord_renting" width:auto; height:auto;>
                 <h2>LANDLORD</h2>
-                <input type="button" class="w3-button w3-white" value="Register">
+                <input type="button" class="w3-button w3-white w3-hover-white" value="Register">
             </div>
         </div>
 
         <!--Tenant Registration-->
         <div class="split right w3-container">           
-                <div class="centered img"> 
-                    <img src="../images/house.png" alt="house" width:auto; height:auto;>
-                    <h2>TENANT</h2>
-                    <input type="button" class="w3-button w3-black" value="Register">
-                </div>
+            <div class="centered img"> 
+                <img src="../images/house.png" alt="house" width:auto; height:auto;>
+                <h2>TENANT</h2>
+                <input type="button" class="w3-button w3-black" value="Register">
+            </div>
         </div>
     </div>
 </body>
