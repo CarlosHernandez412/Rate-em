@@ -1,5 +1,9 @@
 <!-- 3-17-22 LENY: Created homepage-->
 <!-- TO DO: Fix image, continue working on navbar + page -->
+
+<!-- 3-18-22 Laura: Created the search filter-->
+<!-- TO DO: add the database and reroute user to the results 
+ + fix the design of the filter-->
 <html lang="en">
 
 <head>
@@ -9,30 +13,6 @@
   <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <style>
-    html,body,h1,h2,h3,h4,h5,h6 {
-      font-family: "Roboto", sans-serif;
-    }
-    .w3-sidebar {
-      z-index: 3;
-      width: 250px;
-      top: 43px;
-      bottom: 0;
-      height: inherit;
-    }
-    .img1 {
-      background-image: url("../images/homeimg.jpeg");
-      opacity: 0.7;
-      height: 400px;
-      width: auto;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-size: 100% 95%;
-    }
-    .txtcolor {
-      color: #236c93;
-    }
-  </style>
 </head>
 
 <body>
@@ -44,8 +24,8 @@
       <a href="../views/home.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
       <a href="../views/register.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Register</a>
       <a href="../views/login.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Login</a>
-      <a href="#" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
-      <a href="#" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+      <a href="../views/aboutus.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
+      <a href="../views/contact.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
     </div>
   </div>
 
@@ -57,9 +37,57 @@
       <h1 class="w3-text-black w3-center">Rate 'Em</h1>
       <h3 class="w3-text-black">Welcome to the new era of rentals!</h3>
       <h6 class="w3-text-black w3-center"><b><i>True reviews for tenants and landlords alike.</i></b></h6><br>
-      <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Search Tenant/Landlord"
-        name="user"></input>
     </div>
+    
+  <!-- Search Filter -->
+  <link href="style.css" rel="stylesheet">
+    <input type="text" aria-autocomplete="list" aria-expanded="false" 
+    aria-haspopup="true" aria-label="Search" name="query" placeholder="Search" 
+    role="combobox" data-testid="geocomplete" class="_uzckekg" id="query" autocomplete="off">
+    
+    <!--Control buttons-->
+    <div id="myBtnContainer">
+        <button class="btn active" onclick="filterSelection('all')"> Show all</button>
+        <button class="btn" onclick="filterSelection('Tenant')"> Tenant</button>
+        <button class="btn" onclick="filterSelection('Landlord')"> Landlord</button>
+    </div> 
+    <div class="dropdown">
+        <button class="dropbtn" onclick="myFunction('Property')"> Property</button>
+        <div id="myDropdown" class="dropdown-content">
+        <label for="bedrooms">bedrooms</label>
+        <input type="text" id="fname" name="fname">      
+        <label for="bathrooms">bathrooms</label>
+        <input type="text" id="fname" name="fname"> 
+        <label for="zipcode">zipcode</label>
+        <input type="text" id="fname" name="fname"> 
+        <form class="example" style="margin:auto;max-width:300px">
+            <button type="submit" name="search">
+        </form>
+        </div>
+    </div>
+</form>
+<script>
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+function filterFunction() {
+  var input, filter, ul, li, a, i;
+  filter = input.value.toUpperCase();
+  div = document.getElementById("myDropdown");
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}
+</script>
 
     <!-- Our Services -->
     <div class="w3-row w3-padding-64">
