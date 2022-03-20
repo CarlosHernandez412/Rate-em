@@ -1,0 +1,169 @@
+<!--03/17/2022 -Keben Carrillo: created Register Page-->
+<!--03/19/2022 -Keben Carrillo: I was able to fix the whole page background to fill 
+                                when in full screen-->
+<!DOCTYPE html>
+<html>
+<title>Account Selection</title>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: "Helvetica Neue",Helvetica;
+            margin: auto;
+        }
+        * { box-sizing: border-box; }
+
+        /* style the container */
+        .container {
+            border-radius: 5px;
+            padding: 60px 0 30px 0;
+            height: 500px;
+            margin: auto;
+            margin-top: 50px;
+            color: whitesmoke;
+            background-image: linear-gradient(to bottom, black, #3dbaff);
+            position: fixed;
+            top: 0%;
+            right: 0%;
+            width: 100%;
+            height: 200%;
+            position: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* style inputs and link buttons */
+        input,
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            margin: 5px 0;
+            opacity: 0.85;
+            display: inline-block;
+            font-size: 17px;
+            line-height: 20px;
+            text-decoration: none;
+            /* remove underline from anchors */
+        }
+
+        input:hover,
+        .btn:hover {
+            opacity: 1;
+        }
+
+        /* style the submit button */
+        input[type=submit] {
+            background-color: #FFFFFF;
+            color: black;
+            cursor: pointer;
+        }
+
+        input[type=submit]:hover {
+            background-color: #3dbaff;
+        }
+
+        /* Two-column layout */
+        .col {
+            float: left;
+            width: 50%;
+            margin: auto;
+            padding: 0 50px;
+            margin-top: 6px;
+        }
+
+        /* vertical line */
+        .vl {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+            border: 2px solid #ddd;
+            height: 275px;
+        }
+
+        /* text inside the vertical line */
+        .vl-innertext {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #FFFFFF;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            padding: 8px 10px;
+            color: black;
+        }
+
+        .img {
+            width: auto;
+            height: 190px;
+        }
+
+        /* Responsive layout - when the screen is less than 650px wide, make the two columns stack on top of each other instead of next to each other */
+        @media screen and (max-width: 650px) {
+            .col {
+                width: 100%;
+                margin-top: 0;
+            }
+
+            /* hide the vertical line */
+            .vl {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div class="w3-top">
+        <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF;">
+            <div class="w3-bar-item w3-hide-small"><img src="../images/myicon.png" height="45px"></div>
+            <a href="../views/home.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
+            <a href="../views/register.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Register</a>
+            <a href="../views/login.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Login</a>
+            <a href="../views/aboutus.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
+            <a href="../views/contact.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <form action="/action_page.php">
+            <div class="row ">
+                <h2 style="text-align:center">Welcome to Rate 'Em</h2>
+                <h3 style="text-align:center">Register as...</h3>
+                <div class="vl">
+                    <span class="vl-innertext">or</span>
+                </div>
+
+                <div class="col">
+                    <p><b>Landlord</b></p>
+                    <img src="../images/landlord.png" alt="landlord_renting" class="img">
+                    <input type="submit" value="Login">
+
+                </div>
+
+                <div class="col">
+                    <p><b>Tenant</b></p>
+                    <img src="../images/house.png" alt="landlord_renting" class="img">
+                    <input type="submit" value="Login">
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <footer id="myFooter">
+        <div class="w3-container w3-bottom" style="background-color: #E5F2FF;">
+            <h4>Rate 'Em</h4>
+            <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
