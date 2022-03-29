@@ -2,6 +2,8 @@
 <!--03/19/2022 -Keben Carrillo: I was able to fix the whole page background to fill 
                                 when in full screen-->
 <!--03/19/2022 - Leny: Created the forms for tenant and landlord -->
+<!-- TO DO: Continue working on navbar + LINE 183 -->
+
 <!DOCTYPE html>
 <html>
 <title>Account Selection</title>
@@ -12,9 +14,30 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="style.css" rel="stylesheet">
+    
+    <script>
+        args = { "landlordReg": true, "tenantReg": true };
+        $.post("../config/landlordReg.php", args)
+            .done(function (result, status, xhr) {
+                if (status == "success") { console.log(result); }
+                else { console.error(result); }
+            })
+            .fail(function (xhr, status, error) {
+                console.error(error);
+            });
+        $.post("../config/tenantReg.php", args)
+            .done(function (result, status, xhr) {
+                if (status == "success") { console.log(result); }
+                else { console.error(result); }
+            })
+            .fail(function (xhr, status, error) {
+                console.error(error);
+            });
+    </script>
+
     <style>
         body {
-            font-family: "Helvetica Neue",Helvetica;
+            font-family: "Roboto", sans-serif;
             margin: auto;
         }
         * { box-sizing: border-box; }
@@ -65,7 +88,7 @@
     <div class="w3-top">
         <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF;">
             <div class="w3-bar-item w3-hide-small"><img src="../images/myicon.png" height="45px"></div>
-            <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
+            <a href="../views/home.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
             <a href="../views/register.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Register</a>
             <a href="../views/login.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Login</a>
             <a href="../views/aboutus.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
@@ -117,7 +140,7 @@
                 <class="w3-circle w3-margin-top">
             </div>
     
-            <form class="w3-container" action="/action_page.php">
+            <form class="w3-container" action="../config/landlordReg.php" method="post">
                 <div class="w3-section">
                     <h5><b>Account Info:</b></h5>
                     <label><b>*First Name</b></label>
@@ -158,7 +181,17 @@
                     <label><b>*Price</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the price that the property is listed at" 
                         name="price" required>
-                    <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Submit</button>
+                    <label><b>*Property Type</b></label>
+                    <input class="w3-input w3-border w3-margin-bottom" list="type" placeholder="Select the property type..." name="type" required>
+                    <datalist id="type">
+                        <option value="Apartment"></input>
+                        <option value="House"></input>
+                        <option value="Mobile Home"></input>
+                        <option value="Trailer Home"></input>
+                        <option value="Condo"></input>
+                        <option value="Studio"></input>
+                    </datalist>
+                    <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit" name="landlordReg">Submit</button>
                 </div>
             </form>
     
@@ -184,7 +217,7 @@
                 <class="w3-circle w3-margin-top">
             </div>
     
-            <form class="w3-container" action="/action_page.php">
+            <form class="w3-container" action="../config/tenantReg.php" method="post">
                 <div class="w3-section">
                     <h5><b>Account Info:</b></h5>
                     <label><b>*First Name</b></label>
@@ -204,7 +237,7 @@
                         required>
                     <label><b>*Password</b></label>
                     <input class="w3-input w3-border" type="password" placeholder="Enter Password" name="psw" required>
-                    <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Submit</button>
+                    <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit" name="tenantReg">Submit</button>
                 </div>
             </form>
     

@@ -1,5 +1,6 @@
 <?php
 // 3-17-22 LENY: Start working on login
+// TO DO: GET MESSAGES TO PRINT ON SCREEN (ANY ERRORS FOR LOGIN ATTEMPTS)
 
 require_once "../config/.config.php";
 
@@ -22,20 +23,18 @@ if (isset($_POST['login'])) {
 
             if ($result_count == 0) {
                 $_SESSION["error"] = "Error: Email and/or password is incorrect!";
-                header("Location: login.html");
+                header("Location: ../views/login.html");
             } else {
                 //Verify user with password
-                //Uncomment following two lines to verify hashed passwords
                 $pass = password_verify($Password, $res_Password);
                 if ($pass) {
-                /*if ($Password == $res_Password) {*/
                     $_SESSION['FName'] = $res_FName;
                     $_SESSION['Email'] = $res_Email;
-                
-                    header("Location: home.html");
+                    //Route to their profile pages
+                    header("Location: ../views/home.html");
                 } else {
                     $_SESSION["error"] = "Error: Email and/or password is incorrect!";
-                    header("Location: login.html");
+                    header("Location: ../views/login.html");
                 }
             }
         } else {
