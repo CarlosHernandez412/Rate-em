@@ -21,6 +21,10 @@ html,body,h1,h2,h3,h4,h5,h6 {
     color: #236c93;
   }
   
+* {
+    box-sizing: border-box;
+}
+
 input[type=text] {
     width: 100%;
     padding: 12px 20px;
@@ -54,7 +58,8 @@ input[type=text] {
   .dropbtn {
     background-color: white;
     padding: 16px;
-    border: none;
+    border: 3px solid #ccc;
+    cursor: pointer;
   }
   
   .dropbtn:hover, .dropbtn:focus {
@@ -91,5 +96,55 @@ input[type=text] {
   /* Show the dropdown menu on hover */
   .dropdown:hover .dropdown-content {display: block;}
   
-  /* Show the dropdown menu
+  /* Show the dropdown menu */
   .show {display: block;}
+
+  /* Beds filter */
+  .buttonStyle {
+    
+  }
+ .buttonStyle:active, .buttonStyle:focus{
+     color: lightblue;
+ }
+  .bed-filter {
+
+
+  }
+
+  /* Split the screen in half */
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Control the left side */
+.left {
+  left: 0;
+  background-color: #111;
+}
+
+/* Control the right side */
+.right {
+  right: 0;
+  background-color: red;
+}
+
+/* If you want the content centered horizontally and vertically */
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* Style the image inside the centered container, if needed */
+.centered img {
+  width: 150px;
+  border-radius: 50%;
+}

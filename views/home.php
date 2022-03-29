@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -21,7 +22,7 @@
   <div class="w3-top">
     <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF;">
       <div class="w3-bar-item w3-hide-small"><img src="../images/myicon.png" height="45px"></div>
-      <a href="../views/home.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
+      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
       <a href="../views/register.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Register</a>
       <a href="../views/login.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Login</a>
       <a href="../views/aboutus.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
@@ -37,56 +38,35 @@
       <h1 class="w3-text-black w3-center">Rate 'Em</h1>
       <h3 class="w3-text-black">Welcome to the new era of rentals!</h3>
       <h6 class="w3-text-black w3-center"><b><i>True reviews for tenants and landlords alike.</i></b></h6><br>
-    </div>
-    
-  <!-- Search Filter -->
-  <link href="style.css" rel="stylesheet">
-    <input type="text" aria-autocomplete="list" aria-expanded="false" 
-    aria-haspopup="true" aria-label="Search" name="query" placeholder="Search" 
-    role="combobox" data-testid="geocomplete" class="_uzckekg" id="query" autocomplete="off">
-    
-    <!--Control buttons-->
-    <div id="myBtnContainer">
-        <button class="btn active" onclick="filterSelection('all')"> Show all</button>
-        <button class="btn" onclick="filterSelection('Tenant')"> Tenant</button>
-        <button class="btn" onclick="filterSelection('Landlord')"> Landlord</button>
-    </div> 
-    <div class="dropdown">
-        <button class="dropbtn" onclick="myFunction('Property')"> Property</button>
-        <div id="myDropdown" class="dropdown-content">
-        <label for="bedrooms">bedrooms</label>
-        <input type="text" id="fname" name="fname">      
-        <label for="bathrooms">bathrooms</label>
-        <input type="text" id="fname" name="fname"> 
-        <label for="zipcode">zipcode</label>
-        <input type="text" id="fname" name="fname"> 
-        <form class="example" style="margin:auto;max-width:300px">
-            <button type="submit" name="search">
-        </form>
-        </div>
-    </div>
+    <!-- Search bar -->
+    <form class="search-form" role="search" method="post" action="propertySearch.php">
+      <input required type="text" role="combobox" autocomplete="off" placeholder="Enter Tenant, Landlord, or Zip Code" 
+      name="zipcode" value="">
+      <div class="container">
+      <button class="btn" id="btn-search" type="submit" name="search">Search</button>
+    <!-- Including PHP file -->
+    <?php
+  
+    ?>
+    </form>
+      </div>
+    </div>    
+
+  </head>
+  </div>
 </form>
 <script>
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-}
-
-function filterFunction() {
-  var input, filter, ul, li, a, i;
-  filter = input.value.toUpperCase();
-  div = document.getElementById("myDropdown");
-  a = div.getElementsByTagName("a");
-  for (i = 0; i < a.length; i++) {
-    txtValue = a[i].textContent || a[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      a[i].style.display = "";
-    } else {
-      a[i].style.display = "none";
-    }
+/* if user enters zipcode redirect them to propertySearch */
+<?php
+if (isset($_SESSION["search"])) {
+  if (isset($_SESSION["zipcode"])) {
+      header("Location: ../views/propertySearch.php");
+  }
+  else if (isset($_SESSION["tenant"])) {
+      header("Location: ../views/tenant.php");
   }
 }
+?>
 </script>
 
     <!-- Our Services -->
