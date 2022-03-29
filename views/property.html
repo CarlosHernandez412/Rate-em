@@ -1,0 +1,112 @@
+<!--03/17/2022 -Keben Carrillo: created the property page for Lanlord-->
+<!DOCTYPE html>
+<html>
+<title>Property</title>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="style.css" rel="stylesheet">
+    <style>
+         body {
+            font-family: "Helvetica Neue",Helvetica;
+            margin: auto;
+            background-image: linear-gradient(to bottom, black, #3dbaff);
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+        * { box-sizing: border-box; }
+        /* style inputs andlink buttons */
+        input,
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 20px;
+            margin: 5px 0;
+            opacity: 0.85;
+            display: inline-block;
+            font-size: 17px;
+            line-height: 20px;
+            text-decoration: none;
+            /* remove underline from anchors*/
+        }
+
+        input:hover,
+        .btn:hover { opacity: 1;}
+
+        /* style the submit button */
+        input[type=submit] {
+            background-color: #FFFFFF;
+            color: black;
+            cursor: pointer;
+        }
+
+        input[type=submit]:hover { background-color: #3dbaff; }
+        /* Responsive layout - when the screen is less than 650px wide, make the two columns stack on top of each other instead of next to each other */
+        @media screen and (max-width: 650px) {
+            .col {
+                width: 100%;
+                margin-top: 0;
+            }
+
+            /* hide the vertical line */
+            .vl { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div class="w3-top">
+        <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF;">
+            <div class="w3-bar-item w3-hide-small"><img src="../images/myicon.png" height="45px"></div>
+            <a href="../views/home.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
+            <a href="../views/landlordProfile.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
+            <a href="../views/settingLandlord.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Settings</a>
+            <a href="../views/property.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Properies</a>
+            <a href="../views/aboutus.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
+            <a href="../views/contact.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+        </div>
+    </div>
+        
+<!--Form for Landlord to Update Their Property-->     
+    <form class="w3-container" style="margin: 95px; color: whitesmoke;"action="/action_page.php">
+        <div class="w3-section">  
+            <div class="w3-center">                  
+                <br><h5><b>Update Your Property Info:</b></h5>
+            </div>
+            <label><b>*State</b></label>
+            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the state the property is in"
+                name="state" required>
+            <label><b>*City</b></label>
+            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the city the property is in"
+                name="city" required>
+            <label><b>*Zipcode</b></label>
+            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the zipcode of the property"
+                name="zip" required>
+            <label><b>*Number of bathrooms</b></label>
+            <input class="w3-input w3-border w3-margin-bottom" type="number" min="0" placeholder="Enter the number of bathrooms the property has"
+                name="numOfBathrooms" required>
+            <label><b>*Number of bedrooms</b></label>
+            <input class="w3-input w3-border w3-margin-bottom" type="number" min="0" placeholder="Enter the number of bedrooms the property has" 
+                name="numOfBedrooms" required>
+            <label><b>*Price</b></label>
+            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the price that the property is listed at" 
+                name="price" required>
+            <div class="w3-center">
+                <button class="w3-button w3-center w3-green w3-round-xxlarge w3-section w3-padding" style="width:50%" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+
+</body>
+    <footer id="myFooter">
+        <div class="w3-container w3-bottom" style="background-color: #E5F2FF;">
+            <h4>Rate 'Em</h4>
+            <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+        </div>
+    </footer>
+</html>
