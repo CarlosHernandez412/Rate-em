@@ -2,6 +2,8 @@
 // 3-26-22 Leny: Start working on registeration for tenant accounts
 // TO DO: LINE 43 + GET MESSAGES TO PRINT ON SCREEN (ANY ERRORS ON REGISTRATION ATTEMPTS) + TEST
 
+session_start();
+print_r($_SESSION);
 require_once "../config/.config.php";
 
 // Landlord user registeration with validation
@@ -19,8 +21,14 @@ if (isset($_POST['tenantReg'])) {
         strlen($FName) == 0 || strlen($LName) == 0 || strlen($PhoneNumber) == 0 || strlen($Email) == 0 ||
         strlen($Password) == 0
     ) {
+        //$FName = $_POST['fname'];
+        //$MI = $_POST['mname'];
+        //$LName = $_POST['lname'];
+        //$PhoneNumber = $_POST['phonenum'];
+        //$Email = $_POST['email'];
+        //$Password = $_POST['psw'];
         $_SESSION["error"] = "Please fill out all (*) required fields!";
-        header("Location: ../views/register.html");
+        header("Location: ../views/register.php");
     }
     $validation = $db->prepare("SELECT Email FROM User Where Email =?");
     if (!$validation) {
@@ -35,8 +43,14 @@ if (isset($_POST['tenantReg'])) {
                 $result_count++;
             }
             if ($result_count > 0) {
+                //$FName = $_POST['fname'];
+                //$MI = $_POST['mname'];
+                //$LName = $_POST['lname'];
+                //$PhoneNumber = $_POST['phonenum'];
+                //$Email = $_POST['email'];
+                //$Password = $_POST['psw'];
                 $_SESSION["error"] = "Error: Email " . $Email . " already registered";
-                header("Location: ../views/register.html");
+                header("Location: ../views/register.php");
             } else {
                 echo "Registering!";
                 $hash = password_hash($Password, PASSWORD_DEFAULT);
@@ -53,7 +67,7 @@ if (isset($_POST['tenantReg'])) {
                 );
                 if ($statement->execute()) {
                     echo "Registered!";
-                    header("Location: ../views/login.html");
+                    header("Location: ../views/login.php");
                 } else {
                     echo "Registration failed: " . mysqli_error($db);
                     die();

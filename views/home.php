@@ -1,9 +1,17 @@
+<?php
+
+session_start();
+print_r($_SESSION);
+
+?>
 <!-- 03/17/2022 - Leny: Created homepage-->
 <!-- TO DO: Continue working on navbar + page -->
 
 <!-- 3-18-22 Laura: Created the search filter-->
 <!-- TO DO: add the database and reroute user to the results 
  + fix the design of the filter-->
+
+<!-- 4-04-22 Laura: Redesigned the search bar -->
 <html lang="en">
 <title>Home</title>
 <head>
@@ -16,19 +24,53 @@
   <link href="style.css" rel="stylesheet">
 </head>
 
+<script>
+  args = { "logout": true };
+  $.post("../config/accLogin.php", args)
+    .done(function (result, status, xhr) {
+      if (status == "success") { console.log(result); }
+      else { console.error(result); }
+    })
+    .fail(function (xhr, status, error) {
+      console.error(error);
+    });
+</script>
+
 <body>
 
-  <!-- Navbar -->
-  <div class="w3-top">
-    <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF;">
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-theme-d2 w3-left-align w3-large text-color:black">
+    <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF; color: black;">
       <div class="w3-bar-item w3-hide-small"><img src="../images/myicon.png" height="45px"></div>
-      <a href="../views/home.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
-      <a href="../views/register.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Register</a>
-      <a href="../views/login.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Login</a>
-      <a href="../views/aboutus.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
-      <a href="../views/contact.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+      <!-- If logged out -->
+      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
+      <a href="../views/register.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Register</a>
+      <a href="../views/login.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Login</a>
+      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
+      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+      <!-- If logged in as Tenant
+      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
+      <a href="../views/profile.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
+      <a href="../views/settings.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Settings</a>
+      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
+      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+      <form class=".logoutLblPos" action="../config/accLogin.php" method="post">
+        <div class= "w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right"><button id="logout" type="submit" name="logout">Logout</button></div>
+      </form> -->
+      <!-- If logged in as Landlord 
+      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
+      <a href="../views/profile.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
+      <a href="../views/settings.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Settings</a>
+      <a href="../views/property.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Properies</a>
+      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
+      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+      <form class=".logoutLblPos" action="../config/accLogin.php" method="post">
+        <div class= "w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right"><button id="logout" type="submit" name="logout">Logout</button></div>
+      </form>-->
     </div>
   </div>
+</div>
 
   <!-- Main content -->
   <div class="w3-main">
@@ -36,16 +78,18 @@
     <div class="w3-row w3-padding-64 img1"></div>
     <div class="w3-container w3-padding-64 w3-display-topmiddle">
       <h1 class="w3-text-black w3-center">Rate 'Em</h1>
-      <h3 class="w3-text-black">Welcome to the new era of rentals!</h3>
+      <h3 class="w3-text-black w3-center">Welcome to the new era of rentals!</h3>
       <h6 class="w3-text-black w3-center"><b><i>True reviews for tenants and landlords alike.</i></b></h6><br>
-      <!-- Search bar -->
-      <form class="search-form" role="search" method="post" action="propertySearch.html">
-        <input required type="text" role="combobox" autocomplete="off" placeholder="Enter Tenant, Landlord, or Zip Code"
-          name="zipcode" value="">
-          <div class="w3-container w3-center"><button class="btn" id="btn-search" type="submit" name="search">Search</button></div>
-      </form>
-    </div>
+     <!-- Search bar -->
+     <form class="search-form" role="search" method="post" action="../config/searchBar.php">
+      <input type="text" role="combobox" autocomplete="off" placeholder="Enter Zip Code"
+        name="zipcode" maxlength="5" value=""> OR
+      <input type="text" autocomplete="off" placeholder="Enter Tenant or Landlord"
+        name="user" value="">
+        <div class="w3-container w3-center"><button class="btn" id="btn-search" type="submit" name="search">Search</button></div>
+    </form>
   </div>
+</div>
   
     <!-- Our Services -->
     <div class="w3-row w3-padding-64">
@@ -96,7 +140,7 @@
           With a rating system set in place for landlords and tenants, users will be able
           to make a better decision on whether or not they would like to rent a place or
           would allow someone to rent from them.</h6>
-        <h6><a href="../views/aboutus.html" target="_blank">More about us!</a></h6>
+        <h6><a href="../views/aboutus.php" target="_blank">More about us!</a></h6>
       </div>
     </div>
     
@@ -104,7 +148,7 @@
     <div class="w3-row w3-padding-64">
       <div class="w3-container">
         <h1 class="txtcolor">Contact</h1>
-        <h6><a href="../views/contact.html" target="_blank">Have any suggestions, questions, or need help?</a></h6>
+        <h6><a href="../views/contact.php" target="_blank">Have any suggestions, questions, or need help?</a></h6>
       </div>
     </div>
     

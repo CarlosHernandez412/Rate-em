@@ -1,18 +1,36 @@
+<?php
+
+session_start();
+print_r($_SESSION);
+
+?>
+<!-- 03/3/2022 - Leny: Fixed comment container and footer -->
 <!-- Will be used as the individual ratings page for tenants -->
 <!-- WORK IN PROGRESS-->
 <html>
 <head>
-<title>Tenant Profile</title>
+<title>Ratings</title>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="style.css" rel="stylesheet">
+
+<script>
+  args = { "logout": true };
+  $.post("../config/accLogin.php", args)
+    .done(function (result, status, xhr) {
+      if (status == "success") { console.log(result); }
+      else { console.error(result); }
+    })
+    .fail(function (xhr, status, error) {
+      console.error(error);
+    });
+</script>
 
 <style>
 html,body,h1,h2,h3,h4,h5,h6 { font-family: "Roboto", sans-serif; }
@@ -92,58 +110,72 @@ color: orange;
 
 <!-- Navbar -->
 <div class="w3-top">
- <div class="w3-bar w3-theme-d2 w3-left-align w3-large text-color:black">
-  <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF; color: black;">
-    <div class="w3-bar-item w3-hide-small"><img src="../images/myicon.png" height="45px"></div>
-    <a href="../views/home.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
-    <a href="../views/tenantProfile.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
-    <a href="../views/settingTenant.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Settings</a>
-    <a href="../views/aboutus.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
-    <a href="../views/contact.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
-    <a href="../views/logout.html" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right">Logout</a>
+  <div class="w3-bar w3-theme-d2 w3-left-align w3-large text-color:black">
+    <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF; color: black;">
+      <div class="w3-bar-item w3-hide-small"><img src="../images/myicon.png" height="45px"></div>
+      <!-- If logged out
+      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
+      <a href="../views/register.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Register</a>
+      <a href="../views/login.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Login</a>
+      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
+      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>--> 
+      <!-- If logged in as Tenant
+      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
+      <a href="../views/profile.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
+      <a href="../views/settings.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Settings</a>
+      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
+      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+      <form class=".logoutLblPos" action="../config/accLogin.php" method="post">
+        <div class= "w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right"><button id="logout" type="submit" name="logout">Logout</button></div>
+      </form> -->
+      <!-- If logged in as Landlord -->
+      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
+      <a href="../views/profile.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
+      <a href="../views/settings.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Settings</a>
+      <a href="../views/property.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Properies</a>
+      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
+      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+      <form class=".logoutLblPos" action="../config/accLogin.php" method="post">
+        <div class= "w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right"><button id="logout" type="submit" name="logout">Logout</button></div>
+      </form>
+    </div>
+  </div>
 </div>
-  <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="My Account">
-    <img src="../images/house.png" class="w3-circle" style="height:23px;width:23px" alt="Avatar">
-  </a>
- </div>
-</div>
+
 <!-- Page Container: My Profile and Related searches and Comments -->
-<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">    
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px;">
   <!-- The Grid -->
-  <div class="w3-row">
+  <div class="w3-row" style="padding-left: 250px;">
     <!-- Middle Column -->
     <div class="w3-col m9">
       <!--Comment Page-->
-      <div class="w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme"><br>
-        <img src="../images/profile4.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+      <div class="w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme"><br>        
         <!--Time still needs to be fixed, so when a post is added it tells what time is was posted-->
-        <span class="w3-right w3-opacity w3-black">1 min</span>
+        <div class="w3-container #cae4f3 w3-theme-d2 w3-round" style="height: auto;">
+        <span class="w3-right" >16 mins ago</span>
+        <img src="../images/profile4.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:55px"><h4>Jane Doe</h4></div>
         <!--Top of comments to change different background color-Keben-->
-        <header class="w3-container w3-theme-l2">
-        <h4>John Doe</h4><br>
-        </header>
         <hr class="w3-clear">
         <p>Comments would go here.</p>
-          <div class="w3-row-padding" style="margin:0 -16px">
-        </div>
-        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-down" style="font-size:28px;color:white"></i> </button>  
-        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-comment" style="font-size:28px;color:white"></i>  Comment</button> 
+        <hr class="w3-clear">
+        <div class="w3-row-padding" style="margin:0 -16px"></div>
+        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-up" style="font-size:28px;color:white"></i> </button>
+        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-down" style="font-size:28px;color:white"></i> </button>
+        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-comment" style="font-size:28px;color:white"></i>  Comment</button>
       </div>
-    <!-- End Middle Column -->
+      <!-- End Middle Column -->
     </div>
-    
-  <!-- End Grid -->
+    <!-- End Grid -->
   </div>
     </head>
     <body>
-    <span class="heading">User Rating</span>
+    <span class="heading"><h4>User Rating</h4></span>
     <span class="fa fa-star checked"></span>
     <span class="fa fa-star checked"></span>
     <span class="fa fa-star checked"></span>
     <span class="fa fa-star checked"></span>
     <span class="fa fa-star"></span>
-    <p>4.1 average based on 254 reviews.</p>
+    <h6>4.1 average based on 254 reviews.</h6>
     <hr style="border:3px solid #f1f1f1">
     <div class="row">
       <div class="side">
@@ -207,7 +239,7 @@ color: orange;
 <br>
 <!--Footer-->
 <footer id="myFooter">
-    <div class="w3-container" style="background-color: #E5F2FF; color: black;">
+    <div class="w3-container w3-bottom" style="background-color: #E5F2FF; color: black;">
       <!-- w3-theme-l1"> -->
       <h4>Rate 'Em</h4>
       <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
