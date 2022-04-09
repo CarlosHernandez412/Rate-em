@@ -4,9 +4,10 @@ session_start();
 print_r($_SESSION);
 
 ?>
-<!-- 03/17/2022 - Leny: Created login -->
-<!-- TO DO: Continue working on navbar -->
 <html lang="en">
+<!-- 03/17/2022 - Leny: Created login -->
+<!-- 04/07/2022 LENY: Nav bar is complete -->
+<!-- TO DO: Error messages on LINE 80 -->
 <title>Login</title>
 <head>
   <meta charset="UTF-8">
@@ -17,15 +18,17 @@ print_r($_SESSION);
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   
   <script>
+  function login(){
     args = { "login": true };
     $.post("../config/accLogin.php", args)
-      .done(function (result, status, xhr) {
-        if (status == "success") { console.log(result); }
-        else { console.error(result); }
-      })
-      .fail(function (xhr, status, error) {
-        console.error(error);
-      });
+    .done(function (result, status, xhr) {
+      if (status == "success") { console.log(result); }
+      else { console.error(result); }
+    })
+    .fail(function (xhr, status, error) {
+      console.error(error);
+    });
+  }
   </script>
   
   <style>
@@ -74,9 +77,9 @@ print_r($_SESSION);
     <div class="w3-container w3-modal-content w3-border-top w3-card-4 form w3-padding-32" style="max-width:600px; background-color: #FFFFFF;">
       <div class="w3-center"><br>
         <h3><b>Welcome back!</b></h3>
-        <class="w3-circle w3-margin-top">
+        <div><?php if(isset($_SESSION["error"])) { print($_SESSION["error"]); unset($_SESSION["error"]); } ?></div>
       </div>
-
+      
       <form class="w3-container" action="../config/accLogin.php" method="post">
         <div class="w3-section">
           <label><b>Email</b></label>

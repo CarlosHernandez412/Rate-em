@@ -4,15 +4,15 @@ session_start();
 print_r($_SESSION);
 
 ?>
+<html lang="en">
 <!-- 03/17/2022 - Leny: Created homepage-->
-<!-- TO DO: Continue working on navbar + page -->
+<!-- 04/07/2022 LENY: Nav bar is complete -->
 
 <!-- 3-18-22 Laura: Created the search filter-->
 <!-- TO DO: add the database and reroute user to the results 
  + fix the design of the filter-->
 
 <!-- 4-04-22 Laura: Redesigned the search bar -->
-<html lang="en">
 <title>Home</title>
 <head>
   <meta charset="UTF-8">
@@ -25,6 +25,7 @@ print_r($_SESSION);
 </head>
 
 <script>
+function logout() {
   args = { "logout": true };
   $.post("../config/accLogin.php", args)
     .done(function (result, status, xhr) {
@@ -34,6 +35,27 @@ print_r($_SESSION);
     .fail(function (xhr, status, error) {
       console.error(error);
     });
+  }
+  function search() {
+  args = { "zipcode": true };
+  $.post("../config/searhBar.php", args)
+    .done(function (result, status, xhr) {
+      if (status == "success") { console.log(result); }
+      else { console.error(result); }
+    })
+    .fail(function (xhr, status, error) {
+      console.error(error);
+    });
+  args = { "user": true };
+  $.post("../config/accLogin.php", args)
+    .done(function (result, status, xhr) {
+      if (status == "success") { console.log(result); }
+      else { console.error(result); }
+    })
+    .fail(function (xhr, status, error) {
+      console.error(error);
+    });
+  }
 </script>
 
 <body>
@@ -43,31 +65,33 @@ print_r($_SESSION);
   <div class="w3-bar w3-theme-d2 w3-left-align w3-large text-color:black">
     <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF; color: black;">
       <div class="w3-bar-item w3-hide-small"><img src="../images/myicon.png" height="45px"></div>
-      <!-- If logged out -->
-      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
-      <a href="../views/register.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Register</a>
-      <a href="../views/login.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Login</a>
-      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
-      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
-      <!-- If logged in as Tenant
-      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
-      <a href="../views/profile.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
-      <a href="../views/settings.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Settings</a>
-      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
-      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
-      <form class=".logoutLblPos" action="../config/accLogin.php" method="post">
-        <div class= "w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right"><button id="logout" type="submit" name="logout">Logout</button></div>
-      </form> -->
-      <!-- If logged in as Landlord 
-      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
-      <a href="../views/profile.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
-      <a href="../views/settings.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Settings</a>
-      <a href="../views/property.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Properies</a>
-      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
-      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
-      <form class=".logoutLblPos" action="../config/accLogin.php" method="post">
-        <div class= "w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right"><button id="logout" type="submit" name="logout">Logout</button></div>
-      </form>-->
+      <?php if($_SESSION['Type'] === 'Landlord'){
+      echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
+      <a href=\"../views/myProfile.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Profile</a>
+      <a href=\"../views/settings.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Settings</a>
+      <a href=\"../views/property.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Properies</a>
+      <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
+      <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>
+      <form class=\".logoutLblPos\" action=\"../config/accLogin.php\" method=\"post\">
+        <div class= \"w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right\"><button id=\"logout\" type=\"submit\" name=\"logout\">Logout</button></div>
+      </form>";
+    } else if($_SESSION['Type'] === 'Tenant'){
+      echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
+      <a href=\"../views/myProfile.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Profile</a>
+      <a href=\"../views/settings.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Settings</a>
+      <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
+      <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>
+      <form class=\".logoutLblPos\" action=\"../config/accLogin.php\" method=\"post\">
+        <div class= \"w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right\"><button id=\"logout\" type=\"submit\" name=\"logout\">Logout</button></div>
+      </form>";
+    } else { 
+      echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
+      <a href=\"../views/register.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Register</a>
+      <a href=\"../views/login.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Login</a>
+      <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
+      <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>";
+    }
+    ?>
     </div>
   </div>
 </div>
@@ -86,7 +110,8 @@ print_r($_SESSION);
         name="zipcode" maxlength="5" value=""> OR
       <input type="text" autocomplete="off" placeholder="Enter Tenant or Landlord"
         name="user" value="">
-        <div class="w3-container w3-center"><button class="btn" id="btn-search" type="submit" name="search">Search</button></div>
+        <div class="w3-container w3-center"><button class="btn" id="btn-search" type="submit" 
+        name="search">Search</button></div>
     </form>
   </div>
 </div>

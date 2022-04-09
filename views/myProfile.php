@@ -4,11 +4,12 @@ session_start();
 print_r($_SESSION);
 
 ?>
+<html>
 <!-- 03/3/2022 - Leny: Combined tenant and landlord pages into a single profile page file will work to display proper information later -->
 <!-- 4-4-22 - Keben Added logout button-->
-<html>
+<!-- TO DO: Get profile information for logged in accounts -->
 <head>
-<title>Profile</title>
+<title>My Profile</title>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,15 +21,17 @@ print_r($_SESSION);
 <link href="style.css" rel="stylesheet">
 
 <script>
+function logout() {
   args = { "logout": true };
   $.post("../config/accLogin.php", args)
-    .done(function (result, status, xhr) {
-      if (status == "success") { console.log(result); }
-      else { console.error(result); }
-    })
-    .fail(function (xhr, status, error) {
-      console.error(error);
+  .done(function (result, status, xhr) {
+    if (status == "success") { console.log(result); }
+    else { console.error(result); }
+  })
+  .fail(function (xhr, status, error) {
+    console.error(error);
     });
+}
 </script>
 
 <style>
@@ -67,31 +70,36 @@ html,body,h1,h2,h3,h4,h5,h6 { font-family: "Roboto", sans-serif; }
   <div class="w3-bar w3-theme-d2 w3-left-align w3-large text-color:black">
     <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF; color: black;">
       <div class="w3-bar-item w3-hide-small"><img src="../images/myicon.png" height="45px"></div>
-      <!-- If logged out
-      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
-      <a href="../views/register.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Register</a>
-      <a href="../views/login.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Login</a>
-      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
-      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>--> 
-      <!-- If logged in as Tenant
-      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
-      <a href="../views/profile.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
-      <a href="../views/settings.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Settings</a>
-      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
-      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
-      <form class=".logoutLblPos" action="../config/accLogin.php" method="post">
-        <div class= "w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right"><button id="logout" type="submit" name="logout">Logout</button></div>
-      </form> -->
-      <!-- If logged in as Landlord -->
-      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
-      <a href="../views/profile.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
-      <a href="../views/settings.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Settings</a>
-      <a href="../views/property.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Properies</a>
-      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
-      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
-      <form class=".logoutLblPos" action="../config/accLogin.php" method="post">
-        <div class= "w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right"><button id="logout" type="submit" name="logout">Logout</button></div>
-      </form>
+      <?php
+      if($_SESSION){
+        if($_SESSION['Type'] === 'Landlord'){
+          echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
+          <a href=\"../views/myProfile.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Profile</a>
+          <a href=\"../views/settings.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Settings</a>
+          <a href=\"../views/property.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Properies</a>
+          <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
+          <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>
+          <form class=\".logoutLblPos\" action=\"../config/accLogin.php\" method=\"post\">
+            <div class= \"w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right\"><button id=\"logout\" type=\"submit\" name=\"logout\">Logout</button></div>
+          </form>";
+       } else if($_SESSION['Type'] === 'Tenant'){
+          echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
+          <a href=\"../views/myProfile.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Profile</a>
+          <a href=\"../views/settings.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Settings</a>
+          <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
+          <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>
+          <form class=\".logoutLblPos\" action=\"../config/accLogin.php\" method=\"post\">
+            <div class= \"w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right\"><button id=\"logout\" type=\"submit\" name=\"logout\">Logout</button></div>
+          </form>";
+       }
+      }else{
+        echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
+        <a href=\"../views/register.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Register</a>
+        <a href=\"../views/login.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Login</a>
+        <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
+        <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>";
+      }
+    ?>
     </div>
   </div>
 </div>
@@ -106,13 +114,22 @@ html,body,h1,h2,h3,h4,h5,h6 { font-family: "Roboto", sans-serif; }
       <!-- Profile Page on top left side -->
       <div class="w3-card-4 w3-round #2f94ca w3-theme">
         <div class="w3-container">
-         <h4 class="w3-center">Name</h4>
+         <h4 id="accountName" class="w3-center">Name</h4>
          <p class="w3-center"><img src="../images/profile4.png" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
          <hr>
-         <!-- If logged in as Landlord-->
-         <p><i class="fa fa-home fa-fw w3-margin-right "></i> Landlord</p>
-         <!-- If logged in as Tenant 
-         <p><i class="fa fa-home fa-fw w3-margin-right "></i> Tenant</p>-->
+
+         <?php 
+         if($_SESSION){
+           if($_SESSION['Type'] === 'Landlord'){
+             echo "<p><i class=\"fa fa-home fa-fw w3-margin-right\"></i>Landlord</p>";
+          } else if($_SESSION['Type'] === 'Tenant'){
+            echo "<p><i class=\"fa fa-home fa-fw w3-margin-right\"></i> Tenant</p>";
+          }
+         }else{
+          echo "<p><i class=\"fa fa-home fa-fw w3-margin-right\"></i> Account Type</p>";
+         }
+         ?>
+
          <!-- Direct to a more detailed rating of the acocunt -->
          <a href="../views/detailedReview.html">Overall Rating</a>
          <p><i> <span class="fa fa-star checked"></span>
@@ -155,17 +172,26 @@ html,body,h1,h2,h3,h4,h5,h6 { font-family: "Roboto", sans-serif; }
     <!-- Middle Column -->
     <div class="w3-col m9">
 
-      <div class="w3-row-padding">
-        <div class="w3-col m12">
-          <div class="w3-card w3-round w3-theme">
-            <div class="w3-container w3-padding">
-              <h6>Want to leave a comment?</h6>
-              <p contenteditable="true" class="w3-border w3-padding w3-white"></p>
-              <button type="button" class="w3-button"><i class="fa fa-pencil"></i>  Post</button> 
-            </div>
+    <div class="w3-row-padding">
+      <div class="w3-col m12">
+        <div class="w3-card w3-round w3-theme">
+          <?php
+          if($_SESSION){
+            echo "<div class=\"w3-container w3-padding\">
+            <h6>Want to leave a comment?</h6>
+            <p contentEditable=true class=\"w3-border w3-padding w3-white\"></p>
+            <button type=\"button\" class=\"w3-button\"><i class=\"fa fa-pencil\"></i>  Post</button> ";
+          }else{
+            echo "<div class=\"w3-container w3-padding\">
+            <h6>Sign in or register to leave comments!</h6>
+            <p contentEditable=false class=\"w3-border w3-padding w3-white\"></p>
+            <button type=\"button\" class=\"w3-button\"><i class=\"fa fa-pencil\"></i>  Post</button>";
+          }
+          ?>
           </div>
         </div>
       </div>
+    </div>
 
       <!--Comment Page-->
       <div class="w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme"><br>        

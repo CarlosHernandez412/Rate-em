@@ -4,14 +4,13 @@ session_start();
 print_r($_SESSION);
 
 ?>
+<html>
 <!--03/17/2022 -Keben Carrillo: created Register Page-->
 <!--03/19/2022 -Keben Carrillo: I was able to fix the whole page background to fill 
                                 when in full screen-->
 <!--03/19/2022 - Leny: Created the forms for tenant and landlord -->
-<!-- TO DO: Continue working on navbar + LINE 183 -->
-
-<!DOCTYPE html>
-<html>
+<!-- 04/07/2022 LENY: Nav bar is complete -->
+<!-- TO DO: Error messages !SAME AS LINE 80 ON LOGIN.PHP! -->
 <title>Account Selection</title>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,6 +21,7 @@ print_r($_SESSION);
     <link href="style.css" rel="stylesheet">
     
     <script>
+    function register(){
         args = { "landlordReg": true, "tenantReg": true };
         $.post("../config/landlordReg.php", args)
             .done(function (result, status, xhr) {
@@ -39,6 +39,7 @@ print_r($_SESSION);
             .fail(function (xhr, status, error) {
                 console.error(error);
             });
+    }
     </script>
 
     <style>

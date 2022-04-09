@@ -4,11 +4,9 @@ session_start();
 print_r($_SESSION);
 
 ?>
-<!--03/17/2022 -Keben Carrillo: created the property page for Lanlord-->
-<!-- TO DO: Should be a page where landlords can edit(update), delete, or add properties
-to their profile -->
-<!DOCTYPE html>
 <html>
+<!--03/17/2022 -Keben Carrillo: created the property page for Lanlord-->
+<!-- TO DO: Get property information on logged in tenant accounts -->
 <title>My Properties</title>
 <head>
     <meta charset="UTF-8">
@@ -18,18 +16,21 @@ to their profile -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="style.css" rel="stylesheet">
-    
-    <script>
-        args = { "logout": true };
-        $.post("../config/accLogin.php", args)
-          .done(function (result, status, xhr) {
-            if (status == "success") { console.log(result); }
-            else { console.error(result); }
-          })
-          .fail(function (xhr, status, error) {
-            console.error(error);
-          });
-      </script>
+
+
+<script>
+function logout() {
+    args = { "logout": true };
+    $.post("../config/accLogin.php", args)
+    .done(function (result, status, xhr) {
+        if (status == "success") { console.log(result); }
+        else { console.error(result); }
+    })
+    .fail(function (xhr, status, error) {
+      console.error(error);
+    });
+}
+</script>
     
     <style>
         table, th, td, tr {
@@ -94,7 +95,7 @@ to their profile -->
         <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF; color: black;">
             <div class="w3-bar-item w3-hide-small"><img src="../images/myicon.png" height="45px"></div>
             <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
-            <a href="../views/profile.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
+            <a href="../views/myProfile.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Profile</a>
             <a href="../views/settings.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Settings</a>
             <a href="../views/property.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">My Properies</a>
             <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
@@ -106,31 +107,55 @@ to their profile -->
     </div>
 </div>
         
-<!-- For landlords to View/Update/Delete Their Property-->     
-<div class="w3-container" style="margin: 95px; color: whitesmoke;">
-    <div class="w3-section">
-    <div class="w3-center"><br>
-        <h4><b>My Properties:</b></h4>
+<!-- For landlords to View/Update/Delete Their Property-->
+<form action="/action_page.php">
+    <div class="w3-container" style="margin: 95px; color: whitesmoke;">
+        <div class="w3-section">
+            <div class="w3-center"><br>
+                <h6><i><b>Password required</b> to update any property information.</i></h6>
+                <h6><i>That includes deleting a property!</i></h6>
+                <h4><b>My Properties:</b></h4>
+            </div>
+            <table style="width:100%">
+                <tr>
+                    <th>Company</th>
+                    <th>Contact</th>
+                    <th>Country</th>
+                    <th>Company</th>
+                    <th>Contact</th>
+                    <th>Country</th>
+                    <th>Company</th>
+                    <th>Contact</th>
+                    <th>Country</th>
+                    <th style="width: 7%;"><button onclick="document.getElementById('id01').style.display='block'"
+                            class="w3-round-xlarge" style="background-color: lightgreen;" type="button">Add
+                            Property</button></th>
+                </tr>
+                <tr id="update">
+                    <td>Alfreds Futterkiste</td>
+                    <td>Maria Anders</td>
+                    <td>Germany</td>
+                    <td>Alfreds Futterkiste</td>
+                    <td>Maria Anders</td>
+                    <td>Germany</td>
+                    <td>Alfreds Futterkiste</td>
+                    <td>Maria Anders</td>
+                    <td>Germany</td>
+                    <th contentEditable=false style="width: 7%;"><button id="change" onclick="updateProperty()"
+                            class="w3-round-xlarge" style="background-color: lightblue;" type="button">Edit</button>
+                        <button onclick="deleteProperty()" class="w3-round-xlarge" style="background-color: lightcoral;"
+                            type="button">DELETE</button>
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <div class="w3-section" style="padding-left: 43%; padding-top: 20px;">
+            <input class="w3-input w3-border w3-center" style="width:25%" type="password" placeholder="Enter Current Password"
+                name="psw" required></input>
+            <button class="w3-button w3-green w3-round-xxlarge" style="width:25%" type="submit">Submit</button>
+        </div>
     </div>
-    <table style="width:100%">
-        <tr>
-            <th>Company</th>
-            <th>Contact</th>
-            <th>Country</th>
-            <td style="width: 7%;"><button onclick="document.getElementById('id01').style.display='block'" 
-                class="w3-round-xlarge" style="background-color: lightgreen;">Add Property</button></td>
-        </tr>
-        <tr id="update">
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
-            <td contentEditable = false style="width: 7%;"><button id="change" onclick="updateProperty()" class="w3-round-xlarge" style="background-color: lightblue;">Edit</button>
-                <button onclick="deleteProperty()" class="w3-round-xlarge" style="background-color: lightcoral;">Delete</button>
-            </td>
-        </tr>
-    </table>
-    </div>
-</div>
+</form>
 <script>
     function updateProperty() {
         var changeBTN = document.getElementById('change');
@@ -194,6 +219,9 @@ to their profile -->
                         <option value="Condo"></input>
                         <option value="Studio"></input>
                     </datalist>
+                    <label><h6><b>*Current Password</b></h6></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="password" placeholder="Enter Current Password" 
+                        name="psw" required>
                     <div class="w3-center">
                         <button class="w3-button w3-center w3-green w3-round-xxlarge w3-section w3-padding" style="width:50%" type="submit">Submit</button>
                     </div>

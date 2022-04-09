@@ -4,11 +4,11 @@ session_start();
 print_r($_SESSION);
 
 ?>
+<html>
 <!-- 3/28/2022 Laura: Created a new page for search results and filters -->
 <!-- Carlos: Need to fix Geomap from colliding with search filters -->
 <!-- 4/01/2022 Laura: Fixed collision with geomap and search filter and redesigned filtering -->
 <!-- -->
-<html>
 <title>propertySearch</title>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -45,6 +45,7 @@ print_r($_SESSION);
 </style>
 
 <script>
+function logout() {
   args = { "logout": true };
   $.post("../config/accLogin.php", args)
     .done(function (result, status, xhr) {
@@ -54,6 +55,7 @@ print_r($_SESSION);
     .fail(function (xhr, status, error) {
       console.error(error);
     });
+  }
 </script>
 
 <body class="w3-theme-l3">
@@ -61,11 +63,33 @@ print_r($_SESSION);
   <div class="w3-top">
     <div class="w3-bar w3-top w3-left-align w3-large" style="background-color: #E5F2FF;">
       <div class="w3-bar-item w3-hide-small"><img src="../images/myicon.png" height="45px"></div>
-      <a href="../views/home.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Home</a>
-      <a href="../views/choose.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Register</a>
-      <a href="../views/login.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Login</a>
-      <a href="../views/aboutus.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About Us</a>
-      <a href="../views/contact.php" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+      <?php if($_SESSION['Type'] === 'Landlord'){
+      echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
+      <a href=\"../views/myProfile.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Profile</a>
+      <a href=\"../views/settings.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Settings</a>
+      <a href=\"../views/property.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Properies</a>
+      <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
+      <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>
+      <form class=\".logoutLblPos\" action=\"../config/accLogin.php\" method=\"post\">
+        <div class= \"w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right\"><button id=\"logout\" type=\"submit\" name=\"logout\">Logout</button></div>
+      </form>";
+    } else if($_SESSION['Type'] === 'Tenant'){
+      echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
+      <a href=\"../views/myProfile.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Profile</a>
+      <a href=\"../views/settings.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Settings</a>
+      <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
+      <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>
+      <form class=\".logoutLblPos\" action=\"../config/accLogin.php\" method=\"post\">
+        <div class= \"w3-bar-item w3-button w3-hide-small w3-hover-light-blue w3-right\"><button id=\"logout\" type=\"submit\" name=\"logout\">Logout</button></div>
+      </form>";
+    } else { 
+      echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
+      <a href=\"../views/register.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Register</a>
+      <a href=\"../views/login.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Login</a>
+      <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
+      <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>";
+    }
+    ?>
     </div>
   </div>
   <!-- Search Bar/filter -->

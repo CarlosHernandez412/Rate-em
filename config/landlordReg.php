@@ -100,7 +100,7 @@ if (isset($_POST['landlordReg'])) {
                 //$NumOfBedrooms = $_POST['numOfBedrooms'];
                 //$Price = $_POST['price'];
                 //$Type = $_POST['type'];
-                //$_SESSION["error"] = "Error: Email " . $Email . " already registered";
+                $_SESSION["error"] = "Error: Email " . $Email . " already registered";
                 header("Location: ../views/register.php");
             } else {
                 echo "Registering!";
