@@ -1,7 +1,8 @@
 <?php
 // 3-17-22 LENY: Start working on login
 // 4-4-22 Keben: Login Sessions and Logout Work and got logout working
-// 3-17-22 LENY: Also get a logged in account's information (including landlord's properties)
+// 4-08-22 LENY: Also get a logged in account's information (including landlord's properties)
+// 4/10/22 Keben: Worked on displaying error message when registering with existing email
 session_start();
 print_r($_SESSION);
 require_once "../config/.config.php";
@@ -22,6 +23,7 @@ if (isset($_POST['login'])) {
         }
         $noAccount = is_null($Acc);
         if ($noAccount) {
+            $_SESSION["emailAttempt"] = $_POST['email'];
             $_SESSION["error"] = "Error: Email and/or password is incorrect!";
             header("Location: ../views/login.php");
         } else {
@@ -65,12 +67,8 @@ if (isset($_POST['login'])) {
                 //Route to their profile pages
                 header("Location: ../views/myProfile.php");
             } else {
-                // If login fails, then the input values will be saved so user
-                // does not have to re-type email/password. 
-                // In HTML: add value="<?php echo $--- (question mark)>"
-                //$Email = $_POST['email'];
-                //$Password = $_POST['psw'];
-                $_SESSION["error"] = "Error: Email and/or password is incorrect! :(";
+                $_SESSION["emailAttempt"] = $_POST['email'];
+                $_SESSION["error"] = "Sorry, Email and/or password is incorrect! :(";
                 header("Location: ../views/login.php");
             }
         }

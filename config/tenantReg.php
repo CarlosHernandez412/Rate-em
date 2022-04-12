@@ -1,6 +1,7 @@
 <?php
 // 3-26-22 Leny: Start working on registeration for tenant accounts
-// TO DO: LINE 43 + GET MESSAGES TO PRINT ON SCREEN (ANY ERRORS ON REGISTRATION ATTEMPTS) + TEST
+// TO DO: TEST REGISTRATION 
+// 4/10/22 Keben: Worked on displaying error message when registering with existing email
 
 session_start();
 print_r($_SESSION);
@@ -21,13 +22,14 @@ if (isset($_POST['tenantReg'])) {
         strlen($FName) == 0 || strlen($LName) == 0 || strlen($PhoneNumber) == 0 || strlen($Email) == 0 ||
         strlen($Password) == 0
     ) {
-        //$FName = $_POST['fname'];
-        //$MI = $_POST['mname'];
-        //$LName = $_POST['lname'];
-        //$PhoneNumber = $_POST['phonenum'];
-        //$Email = $_POST['email'];
-        //$Password = $_POST['psw'];
-        $_SESSION["error"] = "Please fill out all (*) required fields!";
+        $_SESSION["Tfirst"] = $_POST['fname'];
+        $_SESSION["Tmid"] = $_POST['mname'];
+        $_SESSION["Tlast"] = $_POST['lname'];
+        $_SESSION["Tnum"] = $_POST['phonenum'];
+        $_SESSION["TeAddress"] = $_POST['email'];
+        $_SESSION["Tpass"] = $_POST['psw'];
+        $_SESSION["treg_error"] = "Please fill out all (*) required fields!";
+        $_SESSION["reg_error"] = "Something went wrong, please try again!";
         header("Location: ../views/register.php");
     }
     $validation = $db->prepare("SELECT Email FROM User Where Email =?");
@@ -43,13 +45,14 @@ if (isset($_POST['tenantReg'])) {
                 $result_count++;
             }
             if ($result_count > 0) {
-                //$FName = $_POST['fname'];
-                //$MI = $_POST['mname'];
-                //$LName = $_POST['lname'];
-                //$PhoneNumber = $_POST['phonenum'];
-                //$Email = $_POST['email'];
-                //$Password = $_POST['psw'];
-                $_SESSION["error"] = "Error: Email " . $Email . " already registered";
+                $_SESSION["Tfirst"] = $_POST['fname'];
+                $_SESSION["Tmid"] = $_POST['mname'];
+                $_SESSION["Tlast"] = $_POST['lname'];
+                $_SESSION["Tnum"] = $_POST['phonenum'];
+                $_SESSION["TeAddress"] = $_POST['email'];
+                $_SESSION["Tpass"] = $_POST['psw'];
+                $_SESSION["treg_error"] = "Error: Email " . $Email . " already registered";
+                $_SESSION["reg_error"] = "Something went wrong, please try again!";
                 header("Location: ../views/register.php");
             } else {
                 echo "Registering!";

@@ -3,10 +3,18 @@
 session_start();
 print_r($_SESSION);
 
+if (!($_SESSION)) 
+  header("Location: ../views/login.php");
+else{
+    if ($_SESSION['Type'] === 'Tenant')
+        header("Location: ../views/myProfile.php");
+}
 ?>
 <html>
 <!--03/17/2022 -Keben Carrillo: created the property page for Lanlord-->
-<!-- TO DO: Get property information on logged in tenant accounts -->
+<!-- 4/10/2022 - Leny: Displaying all properties owned by the landlord and each property information-->
+<!-- TO DO: Allow users to edit/delete rows of their property list AND add new properties !PASSWORD WILL BE REQUIRED!-->
+<!-- TO DO: LINE 153 & 203 -->
 <title>My Properties</title>
 <head>
     <meta charset="UTF-8">
@@ -40,7 +48,7 @@ function logout() {
             color:black;
             text-align: center;
         }
-         body {
+        body {
             font-family: "Roboto", sans-serif;
             margin: auto;
             background-image: linear-gradient(to bottom, black, #3dbaff);
@@ -118,35 +126,40 @@ function logout() {
             </div>
             <table style="width:100%">
                 <tr>
-                    <th>Company</th>
-                    <th>Contact</th>
-                    <th>Country</th>
-                    <th>Company</th>
-                    <th>Contact</th>
-                    <th>Country</th>
-                    <th>Company</th>
-                    <th>Contact</th>
-                    <th>Country</th>
+                    <th>Property ID</th>
+                    <th>Type</th>
+                    <th>State</th>
+                    <th>City</th>
+                    <th>Zipcode</th>
+                    <th>Number of rooms</th>
+                    <th>Number of bathrooms</th>
+                    <th>Price</th>
                     <th style="width: 7%;"><button onclick="document.getElementById('id01').style.display='block'"
                             class="w3-round-xlarge" style="background-color: lightgreen;" type="button">Add
                             Property</button></th>
                 </tr>
-                <tr id="update">
-                    <td>Alfreds Futterkiste</td>
-                    <td>Maria Anders</td>
-                    <td>Germany</td>
-                    <td>Alfreds Futterkiste</td>
-                    <td>Maria Anders</td>
-                    <td>Germany</td>
-                    <td>Alfreds Futterkiste</td>
-                    <td>Maria Anders</td>
-                    <td>Germany</td>
-                    <th contentEditable=false style="width: 7%;"><button id="change" onclick="updateProperty()"
-                            class="w3-round-xlarge" style="background-color: lightblue;" type="button">Edit</button>
-                        <button onclick="deleteProperty()" class="w3-round-xlarge" style="background-color: lightcoral;"
-                            type="button">DELETE</button>
+                <?php 
+                $properties = $_SESSION['myProperties'];
+                $numProperties = count($properties);
+                for ($i=0; $i < $numProperties; $i++) { 
+                    echo "<tr id=\"update\">";
+                    echo "<td contentEditable=false>".($_SESSION['myProperties'][$i]['PropertyID'])."</td>";
+                    echo "<td>".($_SESSION['myProperties'][$i]['Type'])."</td>";
+                    echo "<td>".($_SESSION['myProperties'][$i]['State'])."</td>";
+                    echo "<td>".($_SESSION['myProperties'][$i]['City'])."</td>";
+                    echo "<td>".($_SESSION['myProperties'][$i]['Zipcode'])."</td>";
+                    echo "<td>".($_SESSION['myProperties'][$i]['NumOfRooms'])."</td>";
+                    echo "<td>".($_SESSION['myProperties'][$i]['NumOfBathrooms'])."</td>";
+                    echo "<td>".($_SESSION['myProperties'][$i]['Price'])."</td>";
+                    // TO FIX: Edit button in another row only allows the first row to be changed
+                    echo "<th contentEditable=false style=\"width: 7%;\"><button id=\"change\" onclick=\"updateProperty()\"
+                    class=\"w3-round-xlarge\" style=\"background-color: lightblue;\" type=\"button\">Edit</button>
+                    <button onclick=\"deleteProperty()\" class=\"w3-round-xlarge\" style=\"background-color: lightcoral;\"
+                    type=\"button\">DELETE</button>
                     </th>
-                </tr>
+                    </tr>";
+                }
+                ?>
             </table>
         </div>
         <div class="w3-section" style="padding-left: 43%; padding-top: 20px;">
@@ -159,14 +172,14 @@ function logout() {
 <script>
     function updateProperty() {
         var changeBTN = document.getElementById('change');
-        if (document.getElementById("update").contentEditable == "true"){
-            document.getElementById("update").contentEditable = false;
+        if (document.getElementById('update').contentEditable === 'true'){
+            document.getElementById('update').contentEditable = false;
             changeBTN.innerText = changeBTN.value;
             changeBTN.innerText = "Edit";
             changeBTN.style.backgroundColor = 'lightblue'; 
         }
         else{
-            document.getElementById("update").contentEditable = true;
+            document.getElementById('update').contentEditable = true;
             changeBTN.innerText = changeBTN.value;
             changeBTN.innerText = "Save";
             changeBTN.style.backgroundColor = 'lightgreen'; 
@@ -187,7 +200,8 @@ function logout() {
                     <h4><b>Add a New Property!</b></h4>
                 </label>
             </div>
-    
+
+            <!-- TO DO: Create another file to handle new properties being added -->
             <form class="w3-container" action="../config/landlordReg.php" method="post">
                 <div class="w3-section">
                     <label><h6><b>*State</b></h6></label>

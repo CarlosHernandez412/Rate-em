@@ -6,7 +6,7 @@ print_r($_SESSION);
 ?>
 <html>
 <!-- 04/08/2022 - Leny: Copy of myProfile.php, which is for logged in users, this file will be for profiles that have been searched -->
-<!-- TO DO: Get profile information for logged in accounts -->
+<!-- TO DO: Get profile information for a searched user -->
 <head>
 <title>My Profile</title>
 

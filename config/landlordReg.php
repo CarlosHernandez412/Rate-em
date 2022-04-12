@@ -1,6 +1,7 @@
 <?php
 // 3-25-22 Leny: Start working on registeration for landlord accounts
-// TO DO: LINE 52 + GET MESSAGES TO PRINT ON SCREEN (ANY ERRORS ON REGISTRATION ATTEMPTS) + TEST
+// TO DO: TEST
+// 4/10/22 Keben: Worked on displaying error message when registering with existing email
 
 session_start();
 print_r($_SESSION);
@@ -29,24 +30,23 @@ if (isset($_POST['landlordReg'])) {
         $Type !== "Apartment" || $Type !== "House" || $Type !== "Mobile Home" || 
         $Type !== "Trailer Home" || $Type !== "Condo" || $Type !== "Studo"
     ) {
-        // If registeration fails, then the input values will be saved so user does not have to re-type.
-        // In HTML: add value="<?php echo $--- (question mark)>"
         // Account info
-        //$FName = $_POST['fname'];
-        //$MI = $_POST['mname'];
-        //$LName = $_POST['lname'];
-        //$PhoneNumber = $_POST['phonenum'];
-        //$Email = $_POST['email'];
-        //$Password = $_POST['psw'];
+        $_SESSION["Lfirst"] = $_POST['fname'];
+        $_SESSION["Lmid"] = $_POST['mname'];
+        $_SESSION["Llast"] = $_POST['lname'];
+        $_SESSION["Lnum"] = $_POST['phonenum'];
+        $_SESSION["LeAddress"] = $_POST['email'];
+        $_SESSION["Lpass"] = $_POST['psw'];
         // Property info
-        //$State = $_POST['state'];
-        //$City = $_POST['city'];
-        //$Zipcode = $_POST['zip'];
-        //$NumOfBathrooms = $_POST['numOfBathrooms'];
-        //$NumOfBedrooms = $_POST['numOfBedrooms'];
-        //$Price = $_POST['price'];
-        //$Type = $_POST['type'];
-        $_SESSION["error"] = "Please enter a valid choice!";
+        $_SESSION["St"] = $_POST['state'];
+        $_SESSION["Cty"] = $_POST['city'];
+        $_SESSION["Zpcode"] = $_POST['zip'];
+        $_SESSION["Bathrms"] = $_POST['numOfBathrooms'];
+        $_SESSION["Rms"] = $_POST['numOfBedrooms'];
+        $_SESSION["Cost"] = $_POST['price'];
+        $_SESSION["PType"] = $_POST['type'];
+        $_SESSION["lreg_error"] = "Please enter a valid choice for property type!";
+        $_SESSION["reg_error"] = "Something went wrong, please try again!";
         header("Location: ../views/register.php");
     }
     if (
@@ -55,21 +55,22 @@ if (isset($_POST['landlordReg'])) {
         strlen($NumOfBathrooms) == 0 || strlen($NumOfBedrooms) == 0 || strlen($Price) == 0 || strlen($Type) == 0
     ) {
         // Account info
-        //$FName = $_POST['fname'];
-        //$MI = $_POST['mname'];
-        //$LName = $_POST['lname'];
-        //$PhoneNumber = $_POST['phonenum'];
-        //$Email = $_POST['email'];
-        //$Password = $_POST['psw'];
+        $_SESSION["Lfirst"] = $_POST['fname'];
+        $_SESSION["Lmid"] = $_POST['mname'];
+        $_SESSION["Llast"] = $_POST['lname'];
+        $_SESSION["Lnum"] = $_POST['phonenum'];
+        $_SESSION["LeAddress"] = $_POST['email'];
+        $_SESSION["Lpass"] = $_POST['psw'];
         // Property info
-        //$State = $_POST['state'];
-        //$City = $_POST['city'];
-        //$Zipcode = $_POST['zip'];
-        //$NumOfBathrooms = $_POST['numOfBathrooms'];
-        //$NumOfBedrooms = $_POST['numOfBedrooms'];
-        //$Price = $_POST['price'];
-        //$Type = $_POST['type'];
-        $_SESSION["error"] = "Please fill out all (*) required fields!";
+        $_SESSION["St"] = $_POST['state'];
+        $_SESSION["Cty"] = $_POST['city'];
+        $_SESSION["Zpcode"] = $_POST['zip'];
+        $_SESSION["Bathrms"] = $_POST['numOfBathrooms'];
+        $_SESSION["Rms"] = $_POST['numOfBedrooms'];
+        $_SESSION["Cost"] = $_POST['price'];
+        $_SESSION["PType"] = $_POST['type'];
+        $_SESSION["lreg_error"] = "Please fill out all (*) required fields!";
+        $_SESSION["reg_error"] = "Something went wrong, please try again!";
         header("Location: ../views/register.php");
     }
     $validation = $db->prepare("SELECT Email FROM User Where Email =?");
@@ -86,21 +87,22 @@ if (isset($_POST['landlordReg'])) {
             }
             if ($result_count > 0) {
                 // Account info
-                //$FName = $_POST['fname'];
-                //$MI = $_POST['mname'];
-                //$LName = $_POST['lname'];
-                //$PhoneNumber = $_POST['phonenum'];
-                //$Email = $_POST['email'];
-                //$Password = $_POST['psw'];
+                $_SESSION["Lfirst"] = $_POST['fname'];
+                $_SESSION["Lmid"] = $_POST['mname'];
+                $_SESSION["Llast"] = $_POST['lname'];
+                $_SESSION["Lnum"] = $_POST['phonenum'];
+                $_SESSION["LeAddress"] = $_POST['email'];
+                $_SESSION["Lpass"] = $_POST['psw'];
                 // Property info
-                //$State = $_POST['state'];
-                //$City = $_POST['city'];
-                //$Zipcode = $_POST['zip'];
-                //$NumOfBathrooms = $_POST['numOfBathrooms'];
-                //$NumOfBedrooms = $_POST['numOfBedrooms'];
-                //$Price = $_POST['price'];
-                //$Type = $_POST['type'];
-                $_SESSION["error"] = "Error: Email " . $Email . " already registered";
+                $_SESSION["St"] = $_POST['state'];
+                $_SESSION["Cty"] = $_POST['city'];
+                $_SESSION["Zpcode"] = $_POST['zip'];
+                $_SESSION["Bathrms"] = $_POST['numOfBathrooms'];
+                $_SESSION["Rms"] = $_POST['numOfBedrooms'];
+                $_SESSION["Cost"] = $_POST['price'];
+                $_SESSION["PType"] = $_POST['type'];
+                $_SESSION["lreg_error"] = "Error: Email " . $Email . " already registered";
+                $_SESSION["reg_error"] = "Something went wrong, please try again!";
                 header("Location: ../views/register.php");
             } else {
                 echo "Registering!";
@@ -127,21 +129,6 @@ if (isset($_POST['landlordReg'])) {
                     echo "Registered!";
                     header("Location: ../views/login.php");
                 } else {
-                    // Account info
-                    //$FName = $_POST['fname'];
-                    //$MI = $_POST['mname'];
-                    //$LName = $_POST['lname'];
-                    //$PhoneNumber = $_POST['phonenum'];
-                    //$Email = $_POST['email'];
-                    //$Password = $_POST['psw'];
-                    // Property info
-                    //$State = $_POST['state'];
-                    //$City = $_POST['city'];
-                    //$Zipcode = $_POST['zip'];
-                    //$NumOfBathrooms = $_POST['numOfBathrooms'];
-                    //$NumOfBedrooms = $_POST['numOfBedrooms'];
-                    //$Price = $_POST['price'];
-                    //$Type = $_POST['type'];
                     echo "Registration failed: " . mysqli_error($db);
                     die();
                 }

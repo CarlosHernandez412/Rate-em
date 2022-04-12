@@ -10,7 +10,7 @@ print_r($_SESSION);
                                 when in full screen-->
 <!--03/19/2022 - Leny: Created the forms for tenant and landlord -->
 <!-- 04/07/2022 LENY: Nav bar is complete -->
-<!-- TO DO: Error messages !SAME AS LINE 80 ON LOGIN.PHP! -->
+<!--4/10/22 Keben: Worked on displaying error message when registering with existing email-->
 <title>Account Selection</title>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -105,6 +105,7 @@ print_r($_SESSION);
 
     <div class="container">
         <div class="row">
+            <div style="color: red; font-weight: bold;"><?php if(isset($_SESSION["reg_error"])) { print($_SESSION["reg_error"]); unset($_SESSION["reg_error"]); } ?></div>
             <h2 style="text-align:center">Welcome to Rate 'Em</h2>
             <h3 style="text-align:center">Register as...</h3>
             <div class="vl">
@@ -144,7 +145,7 @@ print_r($_SESSION);
                 <label>
                     <h4><b>Welcome!</b></h4>
                 </label>
-                <class="w3-circle w3-margin-top">
+                <div style="color: red; font-weight: bold;"><?php if(isset($_SESSION["lreg_error"])) { print($_SESSION["lreg_error"]); unset($_SESSION["lreg_error"]); } ?></div>
             </div>
     
             <form class="w3-container" action="../config/landlordReg.php" method="post">
@@ -152,44 +153,45 @@ print_r($_SESSION);
                     <h5><b>Account Info:</b></h5>
                     <label><b>*First Name</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter First Name"
-                        name="fname" required>
+                        value="<?php print($_SESSION["Lfirst"]); unset($_SESSION["Lfirst"]); ?>" name="fname" required>
                     <label><b>Middle Name</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Middle Name"
-                        name="mname">
+                        value="<?php print($_SESSION["Lmid"]); unset($_SESSION["Lmid"]); ?>" name="mname">
                     <label><b>*Last Name</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Last Name"
-                        name="lname" required>
+                        value="<?php print($_SESSION["Llast"]); unset($_SESSION["Llast"]); ?>" name="lname" required>
                     <label><b>*Phone Number</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Phone Number"
-                        name="phonenum" required>
+                        value="<?php print($_SESSION["Lnum"]); unset($_SESSION["Lnum"]); ?>" name="phonenum" required>
                     <label><b>*Email</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Enter Email" 
-                        name="email" required>
+                        value="<?php print($_SESSION["LeAddress"]); unset($_SESSION["LeAddress"]); ?>" name="email" required>
                     <label><b>*Password</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="password" placeholder="Enter Password" 
-                        name="psw" required>
+                        value="<?php print($_SESSION["Lpass"]); unset($_SESSION["Lpass"]); ?>" name="psw" required>
                     
                     <br><h5><b>Property Info:</b></h5>
                     <label><b>*State</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the state the property is in"
-                        name="state" required>
+                        value="<?php print($_SESSION["St"]); unset($_SESSION["St"]); ?>" name="state" required>
                     <label><b>*City</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the city the property is in"
-                        name="city" required>
+                        value="<?php print($_SESSION["Cty"]); unset($_SESSION["Cty"]); ?>" name="city" required>
                     <label><b>*Zipcode</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the zipcode of the property"
-                        name="zip" required>
+                        value="<?php print($_SESSION["Zpcode"]); unset($_SESSION["Zpcode"]); ?>" name="zip" required>
                     <label><b>*Number of bathrooms</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="number" min="0" placeholder="Enter the number of bathrooms the property has"
-                        name="numOfBathrooms" required>
+                        value="<?php print($_SESSION["Bathrms"]); unset($_SESSION["Bathrms"]); ?>" name="numOfBathrooms" required>
                     <label><b>*Number of bedrooms</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="number" min="0" placeholder="Enter the number of bedrooms the property has" 
-                        name="numOfBedrooms" required>
+                        value="<?php print($_SESSION["Rms"]); unset($_SESSION["Rms"]); ?>" name="numOfBedrooms" required>
                     <label><b>*Price</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the price that the property is listed at" 
-                        name="price" required>
+                        value="<?php print($_SESSION["Cost"]); unset($_SESSION["Cost"]); ?>" name="price" required>
                     <label><b>*Property Type</b></label>
-                    <input class="w3-input w3-border w3-margin-bottom" list="type" placeholder="Select the property type..." name="type" required>
+                    <input class="w3-input w3-border w3-margin-bottom" list="type" placeholder="Select the property type..."
+                        valuen="<?php print($_SESSION["PType"]); unset($_SESSION["PType"]); ?>" name="type" required>
                     <datalist id="type">
                         <option value="Apartment"></input>
                         <option value="House"></input>
@@ -221,7 +223,7 @@ print_r($_SESSION);
                 <label>
                     <h4><b>Welcome!</b></h4>
                 </label>
-                <class="w3-circle w3-margin-top">
+                <div style="color: red; font-weight: bold;"><?php if(isset($_SESSION["treg_error"])) { print($_SESSION["treg_error"]); unset($_SESSION["treg_error"]); } ?></div>
             </div>
     
             <form class="w3-container" action="../config/tenantReg.php" method="post">
@@ -229,21 +231,22 @@ print_r($_SESSION);
                     <h5><b>Account Info:</b></h5>
                     <label><b>*First Name</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter First Name"
-                        name="fname" required>
+                        value="<?php print($_SESSION["Tfirst"]); unset($_SESSION["Tfirst"]); ?>" name="fname" required>
                     <label><b>Middle Name</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Middle Name"
-                        name="mname">
+                        value="<?php print($_SESSION["Tmid"]); unset($_SESSION["Tmid"]); ?>" name="mname">
                     <label><b>*Last Name</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Last Name"
-                        name="lname" required>
+                        value="<?php print($_SESSION["Tlast"]); unset($_SESSION["Tlast"]); ?>" name="lname" required>
                     <label><b>*Phone Number</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Phone Number"
-                        name="phonenum" required>
+                        value="<?php print($_SESSION["Tnum"]); unset($_SESSION["Tnum"]); ?>" name="phonenum" required>
                     <label><b>*Email</b></label>
-                    <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Enter Email" name="email"
-                        required>
+                    <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Enter Email" 
+                        value="<?php print($_SESSION["TeAddress"]); unset($_SESSION["TeAddress"]); ?>" name="email" required>
                     <label><b>*Password</b></label>
-                    <input class="w3-input w3-border" type="password" placeholder="Enter Password" name="psw" required>
+                    <input class="w3-input w3-border" type="password" placeholder="Enter Password" 
+                        value="<?php print($_SESSION["Tpass"]); unset($_SESSION["Tpass"]); ?>" name="psw" required>
                     <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit" name="tenantReg">Submit</button>
                 </div>
             </form>
@@ -254,7 +257,6 @@ print_r($_SESSION);
                 <span class="w3-right w3-padding w3-hide-small">Already registered? <a
                         href="../views/login.php">Login</a></span>
             </div>
-    
         </div>
     </div>
 </body>

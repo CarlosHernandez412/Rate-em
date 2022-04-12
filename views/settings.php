@@ -3,11 +3,14 @@
 session_start();
 print_r($_SESSION);
 
+if (!($_SESSION)) 
+  header("Location: ../views/login.php");
 ?>
 <html>
 <!--03/26-22 Keben created the landlord settings page-->
 <!-- 03/3/2022 - Leny: Combined tenant and landlord settings page into a single page file -->
 <!-- TO DO: Get profile information for logged in accounts -->
+<!-- TO DO: LINE 136 -->
 </style>
 <title>Settings</title>
 
@@ -131,6 +134,7 @@ print_r($_SESSION);
     </div>
 
     <!-- Main content -->
+    <!-- TO DO: Create another file to handle updates on profile information -->
     <form class="w3-container2" style="margin: 95px; color: whitesmoke;" action="/action_page.php">
         <div class="w3-section">
             <div class="w3-center">
@@ -141,19 +145,19 @@ print_r($_SESSION);
             <label>
                 <h6>First Name</h6>
             </label>
-            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter First Name" name="fname">
+            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter First Name" value="<?php print_r($_SESSION['loggedProfile']['FName']); ?>" name="fname">
             <label>
                 <h6>Middle Name</h6>
             </label>
-            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Middle Name" name="mname">
+            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Middle Name" value="<?php print_r($_SESSION['loggedProfile']['MI']); ?>" name="mname">
             <label>
                 <h6>Last Name</h6>
             </label>
-            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Last Name" name="lname">
+            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Last Name" value="<?php print_r($_SESSION['loggedProfile']['LName']); ?>" name="lname">
             <label>
                 <h6>Phone Number</h6>
             </label>
-            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Phone Number" name="lname">
+            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Phone Number" value="<?php print_r($_SESSION['loggedProfile']['PhoneNumber']); ?>" name="lname">
             <label>
                 <h6>New Password</h6>
             </label>
