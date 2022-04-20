@@ -36,8 +36,8 @@ print_r($_SESSION);
           console.error(error);
         });
     }
-    function search() {
-  args = { "zipcode": true };
+    function anothersearch() {
+  args = { "zipcodeAgain": true };
   $.post("../config/searhBar.php", args)
     .done(function (result, status, xhr) {
       if (status == "success") { console.log(result); }
@@ -127,6 +127,7 @@ print_r($_SESSION);
             echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
           <a href=\"../views/myProfile.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Profile</a>
           <a href=\"../views/settings.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Settings</a>
+          <a href=\"../views/rentals.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Rentals</a>
           <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
           <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>
           <form class=\".logoutLblPos\" action=\"../config/accLogin.php\" method=\"post\">
@@ -154,7 +155,7 @@ print_r($_SESSION);
   <div style="position: relative; left: 0px; top: 55px; max-width: 200px">
     <section class="w3-container" aria-label="filters" style="z-index: 1;">
       <form class="search-form" role="search" method="post" id="search-form" action="../config/searchBar.php">
-        <input required type="text" autocomplete="off" placeholder="Enter Zip Code" name="zipcode" value="" maxlength="5" style="position: fixed; left: 0px; top:52px">
+        <input required type="text" autocomplete="off" placeholder="Enter Zip Code" name="zipcodeAgain" value="" maxlength="5" style="position: fixed; left: 0px; top:52px">
       </form>
   </div>
   <!-- Home Type Selection -->
@@ -335,22 +336,22 @@ print_r($_SESSION);
   <!-- Section for results -->
   <?php
   if ($_SESSION) {
-    if ($_SESSION['LandlordByZip']) {
-      $LandlordResults = $_SESSION['LandlordByZip'];
-      $resultLength = count($LandlordResults);
+    if ($_SESSION['usersResults']) {
+      $results = $_SESSION['usersResults'];
+      $resultLength = count($results);
       for ($i = 0; $i < $resultLength; $i++) {
         echo "<div class=\"w3-container w3-card-4 w3-round w3-margin\" style=\"height:90px;width:450px; background-color: #E5F2FF; color:black;
         position:absolute; top:20%; left:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%)\">";
-        echo ($_SESSION['LandlordByZip'][$i]['FName'])." ".($_SESSION['LandlordByZip'][$i]['MI']). " " .($_SESSION['LandlordByZip'][$i]['LName'])."<br>";
-        echo "<i class=\"fa fa-home fa-fw w3-margin-right\"></i>Landlord</br>";
-        echo "<i class=\"fa fa-envelope fa-fw w3-margin-right\"></i>".($_SESSION['LandlordByZip'][$i]['Email'])."<br>";
+        echo ($_SESSION['usersResults'][$i]['FName'])." ".($_SESSION['usersResults'][$i]['MI'])." ".($_SESSION['usersResults'][$i]['LName'])."<br>";
+        echo "<i class=\"fa fa-home fa-fw w3-margin-right\"></i>".($_SESSION['resultType'])."</br>";
+        echo "<i class=\"fa fa-envelope fa-fw w3-margin-right\"></i>".($_SESSION['usersResults'][$i]['Email'])."<br>";
         ?>
         <a href="../views/resultProfile.php"> Check out my profile for my property information!</a>
         <?php
         echo "</div>";
+        $_SESSION['selectProfile'] = $i;
       }
     }
-    unset($_SESSION["LandlordByZip"]); unset($_SESSION["propertyByZip"]); 
   } 
   ?>
   <!-- Footer -->

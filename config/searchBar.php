@@ -6,14 +6,16 @@
 // + connect with database
 
 // 04/08/22 LENY: Helped retrieve data for searches 
+// 04/14/22 LENY: Worked on results by landlord/tenant name
+
+// TO DO: Get the account comments/ratings - LINE 31 & 53 & 113
 
 require_once "../config/.config.php";
 /* if user enters zipcode redirect them to propertySearch */
 if (isset($_POST["search"])) {
   unset($_POST["search"]);
-  if (isset($_POST["zipcode"]) && is_null($_POST["zipcode"]) == false) {
-    //$_SESSION["zipcode"] = $_POST["zipcode"];
-    $db = getConnected();
+  $db = getConnected();
+  if (isset($_POST["zipcode"]) && !empty($_POST["zipcode"]) && is_numeric($_POST["zipcode"])) {
     $Zipcode = $_POST["zipcode"];
     $user = $db->prepare("SELECT DISTINCT User.* FROM Property JOIN User
       Where Property.Zipcode =? AND Property.LEmail = User.Email");
@@ -26,7 +28,10 @@ if (isset($_POST["search"])) {
     $property->bind_param('i', $Zipcode);
     $property->execute();
     $Property = $property->get_result();
-    
+
+    // Get Comments/Ratings for Accounts
+
+
     $LandlordResult = [];
     $PropertyResult = [];
     while ($row = $Property->fetch_assoc()) {
@@ -35,23 +40,22 @@ if (isset($_POST["search"])) {
     while ($row = $Landlord->fetch_assoc()) {
       $LandlordResult[] = $row;
     }
-    $_SESSION["propertyByZip"] = $PropertyResult;
-    $_SESSION["LandlordByZip"] = $LandlordResult;
-    //echo json_encode($results);
+    $_SESSION["resultsProperties"] = $PropertyResult;
+    $_SESSION["usersResults"] = $LandlordResult;
+    $_SESSION['resultType'] = "Landlord";
     header("Location: ../views/propertySearch.php");
-  }
-  else if (isset($_POST["user"]) && is_null($_POST["user"]) == false) {
-    //$_SESSION["user"] = $_POST["user"];
+  } else if (isset($_POST["user"]) && !empty($_POST["user"]) && !(is_numeric($_POST["user"]))) {
     $UserSearch = $_POST["user"];
-    $db = getConnected();
     $query = $db->prepare("SELECT * FROM User Where FName =?");
     $query->bind_param('s', $UserSearch);
     $query->execute();
     $Account = $query->get_result();
 
+    // Get Comments/Ratings for Accounts
+
     $result = [];
     while ($row = $Account->fetch_assoc()) {
-        $result[] = $row;
+      $result[] = $row;
     }
     $accType = $db->prepare("SELECT Landlord.Email FROM Landlord Where Email =?");
     $accType->bind_param('s', $result[0]["Email"]);
@@ -63,24 +67,51 @@ if (isset($_POST["search"])) {
           $landlordAcc++;
         }
         if ($landlordAcc == 0) {
+          $query = $db->prepare("SELECT DISTINCT Property.*, PropertyType.Type, Occupies.Stars FROM Property 
+            NATURAL JOIN PropertyType NATURAL JOIN Occupies NATURAL JOIN Tenant NATURAL JOIN User 
+            Where Occupies.TEmail = Tenant.Email AND User.FName =?");
+          $query->bind_param('s', $UserSearch);
+          $query->execute();
+          $prevRentals = $query->get_result();
+
+          $resultsPrevRentals = [];
+          while ($row = $prevRentals->fetch_assoc()) {
+            $resultsPrevRentals[] = $row;
+          }
           $_SESSION["usersResults"] = $result;
-          $_SESSION['Type'] = "Tenant";
-          header("Location: ../views/userResults.php");
+          $_SESSION["resultsPrevRentals"] = $resultsPrevRentals;
+          $_SESSION['resultType'] = "Tenant";
+          header("Location: ../views/propertySearch.php");
+          //header("Location: ../views/userResults.php");
         } else {
+          $query = $db->prepare("SELECT * FROM Property NATURAL JOIN PropertyType Where LEmail =?");
+          $query->bind_param('s', $result[0]["Email"]);
+          $query->execute();
+          $properties = $query->get_result();
+
+          $propertyList = [];
+          while ($row = $properties->fetch_assoc()) {
+            $propertyList[] = $row;
+          }
           $_SESSION["usersResults"] = $result;
-          $_SESSION['Type'] = "Landlord";
-          header("Location: ../views/userResults.php");
+          $_SESSION["resultsProperties"] = $propertyList;
+          $_SESSION['resultType'] = "Landlord";
+          header("Location: ../views/propertySearch.php");
+          //header("Location: ../views/userResults.php");
         }
       }
+    } else {
+      header("Location: ../views/home.php");
     }
+  } else {
+    header("Location: ../views/home.php");
   }
-}else{
+} else {
   header("Location: ../views/home.php");
 }
-if (isset($_POST["zipcode"])) {
-  //$_SESSION["zipcode"] = $_POST["zipcode"];
+if (isset($_POST["zipcodeAgain"]) && !empty($_POST["zipcodeAgain"]) && is_numeric($_POST["zipcodeAgain"])) {
   $db = getConnected();
-  $Zipcode = $_POST["zipcode"];
+  $Zipcode = $_POST["zipcodeAgain"];
   $user = $db->prepare("SELECT DISTINCT User.* FROM Property JOIN User
     Where Property.Zipcode =? AND Property.LEmail = User.Email");
   $user->bind_param('i', $Zipcode);
@@ -93,6 +124,9 @@ if (isset($_POST["zipcode"])) {
   $property->execute();
   $Property = $property->get_result();
   
+  // Get Comments/Ratings for Accounts
+
+
   $LandlordResult = [];
   $PropertyResult = [];
   while ($row = $Property->fetch_assoc()) {
@@ -101,9 +135,11 @@ if (isset($_POST["zipcode"])) {
   while ($row = $Landlord->fetch_assoc()) {
     $LandlordResult[] = $row;
   }
-  $_SESSION["propertyByZip"] = $PropertyResult;
-  $_SESSION["LandlordByZip"] = $LandlordResult;
-  //echo json_encode($results);
+  $_SESSION["resultsProperties"] = $PropertyResult;
+  $_SESSION["usersResults"] = $LandlordResult;
+  $_SESSION['resultType'] = "Landlord";
+  header("Location: ../views/propertySearch.php");
+} else {
   header("Location: ../views/propertySearch.php");
 }
 ?>

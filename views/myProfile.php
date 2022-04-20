@@ -92,6 +92,7 @@ if (!($_SESSION))
             echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
           <a href=\"../views/myProfile.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Profile</a>
           <a href=\"../views/settings.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Settings</a>
+          <a href=\"../views/rentals.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Rentals</a>
           <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
           <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>
           <form class=\".logoutLblPos\" action=\"../config/accLogin.php\" method=\"post\">
@@ -159,9 +160,7 @@ if (!($_SESSION))
                 for ($i=0; $i < $numProperties; $i++) { 
                   echo "<div style=\"font-size: 17px;\"><b>Property ".($i+1).":</b></div>";
                   echo "Type: ".($_SESSION['myProperties'][$i]['Type'])."<br>";
-                  echo "State: ".($_SESSION['myProperties'][$i]['State'])."<br>";
-                  echo "City: ".($_SESSION['myProperties'][$i]['City'])."<br>";
-                  echo "Zipcode: ".($_SESSION['myProperties'][$i]['Zipcode'])."<br>";
+                  echo "Property Location: ".($_SESSION['myProperties'][$i]['Zipcode'])." ".($_SESSION['myProperties'][$i]['City']).", ".($_SESSION['myProperties'][$i]['State'])."<br>";
                   echo "Number of rooms: ".($_SESSION['myProperties'][$i]['NumOfRooms'])."<br>";
                   echo "Number of bathrooms: ".($_SESSION['myProperties'][$i]['NumOfBathrooms'])."<br>";
                   echo "Price: ".($_SESSION['myProperties'][$i]['Price'])."<br>";
@@ -169,7 +168,20 @@ if (!($_SESSION))
                 }
               } else if ($_SESSION['Type'] === 'Tenant') {
                 // If logged in as Tenant 
-                echo "<p>Previous Rentals</p>";
+                echo "<p><h4>Previous Rentals</h4></p>";
+                $rentals = $_SESSION['previousRentals'];
+                $numRentals = count($rentals);
+                for ($i=0; $i < $numRentals; $i++) { 
+                  echo "<div style=\"font-size: 17px;\"><b>Property ".($i+1).":</b></div>";
+                  echo "Property Owner: ".($_SESSION['previousRentals'][$i]['LEmail'])."<br>";
+                  echo "Property Type: ".($_SESSION['previousRentals'][$i]['Type'])."<br>";
+                  echo "Property Location: ".($_SESSION['previousRentals'][$i]['City']).", ".($_SESSION['previousRentals'][$i]['State'])."<br>";
+                  echo "Number of rooms: ".($_SESSION['previousRentals'][$i]['NumOfRooms'])."<br>";
+                  echo "Number of bathrooms: ".($_SESSION['previousRentals'][$i]['NumOfBathrooms'])."<br>";
+                  echo "Property Price: ".($_SESSION['previousRentals'][$i]['Price'])."<br>";
+                  echo "My Rental Rating: ".($_SESSION['previousRentals'][$i]['Stars'])."/5 <br>";
+                  echo "<br>";
+                }
               }
             }
             ?>

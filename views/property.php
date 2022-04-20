@@ -14,7 +14,6 @@ else{
 <!--03/17/2022 -Keben Carrillo: created the property page for Lanlord-->
 <!-- 4/10/2022 - Leny: Displaying all properties owned by the landlord and each property information-->
 <!-- TO DO: Allow users to edit/delete rows of their property list AND add new properties !PASSWORD WILL BE REQUIRED!-->
-<!-- TO DO: LINE 153 & 203 -->
 <title>My Properties</title>
 <head>
     <meta charset="UTF-8">
@@ -120,8 +119,8 @@ function logout() {
     <div class="w3-container" style="margin: 95px; color: whitesmoke;">
         <div class="w3-section">
             <div class="w3-center"><br>
-                <h6><i><b>Password required</b> to update any property information.</i></h6>
-                <h6><i>That includes deleting a property!</i></h6>
+                <h6><i><b>Password required</b> to update any information.</i></h6>
+                <h6><i>That includes deleting!</i></h6>
                 <h4><b>My Properties:</b></h4>
             </div>
             <table style="width:100%">
@@ -166,6 +165,45 @@ function logout() {
             <input class="w3-input w3-border w3-center" style="width:25%" type="password" placeholder="Enter Current Password"
                 name="psw" required></input>
             <button class="w3-button w3-green w3-round-xxlarge" style="width:25%" type="submit">Submit</button>
+        </div>
+    </div>
+</form>
+<!-- For landlords to view their renters and add -->
+<form action="/action_page.php">
+    <div class="w3-container" style="margin: 95px; color: whitesmoke;">
+        <div class="w3-section">
+            <div class="w3-center"><br>
+                <h4><b>My Renters:</b></h4>
+            </div>
+            <table style="width:100%">
+                <tr>
+                    <th>Property ID</th>
+                    <th>Tenant</th>
+                    <th>Start-Date</th>
+                    <th>End-Date</th>
+                    <th>Their Rating (1-5)</th>
+                    <th style="width: 7%;"><button onclick="document.getElementById('id02').style.display='block'"
+                            class="w3-round-xlarge" style="background-color: lightgreen;" type="button">Add
+                            A Renter</button></th>
+                </tr>
+                <?php 
+                $renters = $_SESSION['myRenters'];
+                $numRenters = count($renters);
+                for ($i=0; $i < $numRenters; $i++) { 
+                    echo "<tr>";
+                    echo "<td>".($_SESSION['myRenters'][$i]['PropertyID'])."</td>";
+                    echo "<td>".($_SESSION['myRenters'][$i]['TEmail'])."</td>";
+                    echo "<td>".($_SESSION['myRenters'][$i]['Start'])."</td>";
+                    if(is_null($_SESSION['myRenters'][$i]['End'])){
+                        echo "<td contentEditable=false>Currently Renting!</td>";
+                    }else{ 
+                        echo "<td contentEditable=false>".($_SESSION['myRenters'][$i]['End'])."</td>";
+                    }
+                    echo "<td>".($_SESSION['myRenters'][$i]['Stars'])."</td>";
+                    echo "</tr>";
+                }
+                ?>
+            </table>
         </div>
     </div>
 </form>
@@ -247,12 +285,58 @@ function logout() {
             </form>  
         </div>
     </div>
+    <!--Popup form for Landlord to add a new renter-->  
+    <div id="id02" class="w3-modal">
+        <div class="w3-round-xxlarge w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+    
+            <div class="w3-center"><br>
+                <span onclick="document.getElementById('id02').style.display='none'"
+                    class="w3-button w3-xlarge w3-transparent w3-round-xxlarge w3-display-topright" title="Close Modal">x</span>
+                <label>
+                    <h4><b>Add a new Renter!</b></h4>
+                </label>
+            </div>
+
+            <!-- TO DO: Create another file to handle new renters being added 
+                    th>Property ID</th>
+                    <th>Tenant</th>
+                    <th>Start-Date</th>
+                    <th>End-Date</th>
+        -->
+            <form class="w3-container" action="../config/landlordReg.php" method="post">
+                <div class="w3-section">
+                    <label><h6><b>*Property ID - refer to "My Properties" Table </b></h6></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="number" min="0" name="propID" required>
+                    <label><h6><b>*Tenant</b></h6></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Enter the tenant's email" name="tEmail" required>
+                    <label><h6><b>*Start-Date</b></h6></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="date" placeholder="Enter the start date" name="startDate" required>
+                    <label><h6><b>*End-Date</b></h6></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="date" placeholder="Enter the end date" name="endDate" required>
+                    <label class="w3-center"><h6><b><i>The rating will be 0 until the tenant gives a rating!</i></b></h6></label>
+                    <label><h6><b>*Current Password</b></h6></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="password" placeholder="Enter Current Password" 
+                        name="psw" required>
+                    <div class="w3-center">
+                        <button class="w3-button w3-center w3-green w3-round-xxlarge w3-section w3-padding" style="width:50%" type="submit">Submit</button>
+                    </div>
+                    <div class="w3-center">
+                        <button onclick="document.getElementById('id02').style.display='none'" style="width:50%" type="button" 
+                        class="w3-button w3-center w3-red w3-round-xxlarge w3-section w3-padding">Cancel</button>
+                    </div>
+                </div>
+            </form>  
+        </div>
+    </div>
+  
+  <!--Footer-->
+  <footer id="myFooter">
+    <div class="w3-container" style="background-color: #E5F2FF; color: black;">
+      <!-- w3-theme-l1"> -->
+      <h4>Rate 'Em</h4>
+      <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+    </div>
+  </footer>
 
 </body>
-    <footer id="myFooter">
-        <div class="w3-container w3-bottom" style="background-color: #E5F2FF;">
-            <h4>Rate 'Em</h4>
-            <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-        </div>
-    </footer>
 </html>

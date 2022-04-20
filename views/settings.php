@@ -9,7 +9,6 @@ if (!($_SESSION))
 <html>
 <!--03/26-22 Keben created the landlord settings page-->
 <!-- 03/3/2022 - Leny: Combined tenant and landlord settings page into a single page file -->
-<!-- TO DO: Get profile information for logged in accounts -->
 <!-- TO DO: LINE 136 -->
 </style>
 <title>Settings</title>
@@ -29,6 +28,22 @@ if (!($_SESSION))
                 "logout": true
             };
             $.post("../config/accLogin.php", args)
+                .done(function(result, status, xhr) {
+                    if (status == "success") {
+                        console.log(result);
+                    } else {
+                        console.error(result);
+                    }
+                })
+                .fail(function(xhr, status, error) {
+                    console.error(error);
+                });
+        }
+        function update() {
+            args = {
+                "update": true
+            };
+            $.post("../config/updateAcc.php", args)
                 .done(function(result, status, xhr) {
                     if (status == "success") {
                         console.log(result);
@@ -122,6 +137,7 @@ if (!($_SESSION))
                     echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
                     <a href=\"../views/myProfile.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Profile</a>
                     <a href=\"../views/settings.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Settings</a>
+                    <a href=\"../views/rentals.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">My Rentals</a>
                     <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
                     <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>
                     <form class=\".logoutLblPos\" action=\"../config/accLogin.php\" method=\"post\">
@@ -135,7 +151,7 @@ if (!($_SESSION))
 
     <!-- Main content -->
     <!-- TO DO: Create another file to handle updates on profile information -->
-    <form class="w3-container2" style="margin: 95px; color: whitesmoke;" action="/action_page.php">
+    <form class="w3-container2" style="margin: 95px; color: whitesmoke;" action="../config/updateAcc.php">
         <div class="w3-section">
             <div class="w3-center">
                 <h6><i><b>Password required</b> to update any account information.</i></h6>
@@ -157,7 +173,7 @@ if (!($_SESSION))
             <label>
                 <h6>Phone Number</h6>
             </label>
-            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Phone Number" value="<?php print_r($_SESSION['loggedProfile']['PhoneNumber']); ?>" name="lname">
+            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Phone Number" value="<?php print_r($_SESSION['loggedProfile']['PhoneNumber']); ?>" name="phonenum">
             <label>
                 <h6>New Password</h6>
             </label>
@@ -168,19 +184,21 @@ if (!($_SESSION))
                         <h6>*Current Password</h6>
                     </label>
                     <input class="w3-input w3-border w3-margin-bottom" style="width:50%" type="password" placeholder="Enter Current Password" name="psw" required>
-                    <button class="w3-button w3-green w3-center w3-round-xxlarge w3-section w3-padding" style="width:50%" type="submit">Submit</button>
-                    <button class="w3-button w3-red w3-center w3-round-xxlarge w3-section w3-padding" style="width:50%" type="submit">DELETE ACCOUNT</button>
+                    <button class="w3-button w3-green w3-center w3-round-xxlarge w3-section w3-padding" style="width:50%" type="submit" name="update">Submit</button>
+                    <button class="w3-button w3-red w3-center w3-round-xxlarge w3-section w3-padding" style="width:50%" type="submit" name="delete">DELETE ACCOUNT</button>
                 </div>
             </div>
         </div>
     </form>
     <!-- END MAIN -->
-</body>
-<footer id="myFooter">
-    <div class="w3-container w3-bottom" style="background-color: #E5F2FF;">
-        <h4>Rate 'Em</h4>
-        <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+  <!--Footer-->
+  <footer id="myFooter">
+    <div class="w3-container" style="background-color: #E5F2FF; color: black;">
+      <!-- w3-theme-l1"> -->
+      <h4>Rate 'Em</h4>
+      <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
     </div>
-</footer>
+  </footer>
+</body>
 
 </html>

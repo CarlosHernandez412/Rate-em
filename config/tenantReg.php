@@ -1,7 +1,7 @@
 <?php
 // 3-26-22 Leny: Start working on registeration for tenant accounts
-// TO DO: TEST REGISTRATION 
 // 4/10/22 Keben: Worked on displaying error message when registering with existing email
+// 3-18-22 Leny: Registration works with validation
 
 session_start();
 print_r($_SESSION);
@@ -44,21 +44,30 @@ if (isset($_POST['tenantReg'])) {
             while ($validation->fetch()) {
                 $result_count++;
             }
-            if ($result_count > 0) {
+            $phoneValidation = $db->prepare("SELECT PhoneNumber FROM User Where PhoneNumber =?");
+            $phoneValidation->bind_param('s', $PhoneNumber);
+            $phoneValidation->execute();
+            $phone_count = 0;
+            while ($phoneValidation->fetch()) {
+                $phone_count++;
+            }
+            if ($result_count > 0 || $phone_count > 0) {
+                if ($result_count > 0)
+                    $_SESSION["treg_error"] = "Email '".$Email."' already registered!";
+                elseif ($phone_count > 0)
+                    $_SESSION["treg_error"] = "An account has already been registered with the phone number '".$PhoneNumber."'";
                 $_SESSION["Tfirst"] = $_POST['fname'];
                 $_SESSION["Tmid"] = $_POST['mname'];
                 $_SESSION["Tlast"] = $_POST['lname'];
                 $_SESSION["Tnum"] = $_POST['phonenum'];
                 $_SESSION["TeAddress"] = $_POST['email'];
                 $_SESSION["Tpass"] = $_POST['psw'];
-                $_SESSION["treg_error"] = "Error: Email " . $Email . " already registered";
                 $_SESSION["reg_error"] = "Something went wrong, please try again!";
                 header("Location: ../views/register.php");
             } else {
                 echo "Registering!";
                 $hash = password_hash($Password, PASSWORD_DEFAULT);
-                // TO DO: PROCEDURE CALL FOR REGISTERING TENANT
-                $statement = $db->prepare("CALL landlordRegister(?, ?, ?, ?, ?, ?)");
+                $statement = $db->prepare("CALL tenantRegister(?, ?, ?, ?, ?, ?)");
                 $statement->bind_param(
                     'ssssss',
                     $Email,
@@ -85,5 +94,3 @@ if (isset($_POST['tenantReg'])) {
         die();
     }
 }
-
-?>

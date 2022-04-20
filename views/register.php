@@ -177,7 +177,7 @@ print_r($_SESSION);
                     <label><b>*City</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the city the property is in"
                         value="<?php print($_SESSION["Cty"]); unset($_SESSION["Cty"]); ?>" name="city" required>
-                    <label><b>*Zipcode</b></label>
+                    <label><b>*Zipcode - Please provide 5 digit zipcodes, otherwise only first 5 digits will be saved.</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the zipcode of the property"
                         value="<?php print($_SESSION["Zpcode"]); unset($_SESSION["Zpcode"]); ?>" name="zip" required>
                     <label><b>*Number of bathrooms</b></label>
@@ -190,27 +190,25 @@ print_r($_SESSION);
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the price that the property is listed at" 
                         value="<?php print($_SESSION["Cost"]); unset($_SESSION["Cost"]); ?>" name="price" required>
                     <label><b>*Property Type</b></label>
-                    <input class="w3-input w3-border w3-margin-bottom" list="type" placeholder="Select the property type..."
-                        valuen="<?php print($_SESSION["PType"]); unset($_SESSION["PType"]); ?>" name="type" required>
-                    <datalist id="type">
-                        <option value="Apartment"></input>
-                        <option value="House"></input>
-                        <option value="Mobile Home"></input>
-                        <option value="Trailer Home"></input>
-                        <option value="Condo"></input>
-                        <option value="Studio"></input>
+                    <input class="w3-input w3-border w3-margin-bottom" type="text" list="types" placeholder="Select the property type..."
+                        value="<?php print($_SESSION["PType"]); unset($_SESSION["PType"]); ?>" name="type" required>
+                    <datalist id="types">
+                        <option value="Apartment"></option>
+                        <option value="House"></option>
+                        <option value="Mobile Home"></option>
+                        <option value="Trailer Home"></option>
+                        <option value="Condo"></option>
+                        <option value="Studio"></option>
                     </datalist>
                     <button class="w3-button w3-round-xxlarge w3-block w3-green w3-section w3-padding" type="submit" name="landlordReg">Submit</button>
                 </div>
             </form>
-    
             <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
                 <button onclick="document.getElementById('id01').style.display='none'" type="button"
                     class="w3-button w3-red">Cancel</button>
                 <span class="w3-right w3-padding w3-hide-small">Already registered? <a
                         href="../views/login.php">Login</a></span>
             </div>
-    
         </div>
     </div>
     <!-- Tenant -->

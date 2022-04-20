@@ -3,6 +3,9 @@
 // 4-4-22 Keben: Login Sessions and Logout Work and got logout working
 // 4-08-22 LENY: Also get a logged in account's information (including landlord's properties)
 // 4/10/22 Keben: Worked on displaying error message when registering with existing email
+
+// TO DO: Get the account comments/ratings - LINE 77
+
 session_start();
 print_r($_SESSION);
 require_once "../config/.config.php";
@@ -48,7 +51,41 @@ if (isset($_POST['login'])) {
                         while ($row = $properties->fetch_assoc()) {
                             $propertyList[] = $row;
                         }
+                        $query = $db->prepare("SELECT Occupies.* FROM Property NATURAL JOIN Occupies WHERE Property.LEmail =?");
+                        $query->bind_param('s', $res_LEmail);
+                        $query->execute();
+                        $myRenters = $query->get_result();
+
+                        $myRentersList = [];
+                        while ($row = $myRenters->fetch_assoc()) {
+                            $myRentersList[] = $row;
+                        };
                         echo json_encode($propertyList);
+                        echo json_encode($myRentersList);
+                    } else {
+                        $query = $db->prepare("SELECT DISTINCT Property.*, PropertyType.Type, Occupies.Stars FROM Property 
+                            NATURAL JOIN PropertyType NATURAL JOIN Occupies INNER JOIN Tenant ON Occupies.TEmail =?");
+                        $query->bind_param('s', $Email);
+                        $query->execute();
+                        $properties = $query->get_result();
+
+                        $propertyList = [];
+                        while ($row = $properties->fetch_assoc()) {
+                            $propertyList[] = $row;
+                        }
+                        $query = $db->prepare("SELECT Property.LEmail, PropertyType.Type, Occupies.* FROM Property 
+                            NATURAL JOIN PropertyType NATURAL JOIN Occupies WHERE Occupies.TEmail =?");
+                        $query->bind_param('s', $Email);
+                        $query->execute();
+                        $properties = $query->get_result();
+                        
+                        $allRentals = [];
+                        while ($row = $properties->fetch_assoc()) {
+                            $allRentals[] = $row;
+                        }
+                        // Get Comments/Ratings for Accounts
+
+
                     }
                 }
             }
@@ -58,10 +95,13 @@ if (isset($_POST['login'])) {
                 session_start();
                 if ($landlordAcc == 0) {
                     $_SESSION['loggedProfile'] = $Acc[0];
+                    $_SESSION['previousRentals'] = $propertyList;
+                    $_SESSION['allRentals'] = $allRentals;
                     $_SESSION['Type'] = "Tenant";
                 } else {
                     $_SESSION['loggedProfile'] = $Acc[0];
                     $_SESSION['myProperties'] = $propertyList;
+                    $_SESSION['myRenters'] = $myRentersList;
                     $_SESSION['Type'] = "Landlord";
                 }
                 //Route to their profile pages
