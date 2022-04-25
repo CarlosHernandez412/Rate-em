@@ -1,7 +1,7 @@
 <?php
-// 3-25-22 Leny: Start working on registeration for landlord accounts
-// 4/10/22 Keben: Worked on displaying error message when registering with existing email
-// 3-18-22 Leny: Registration works with validation
+// 03/25/2022 Leny: Start working on registeration for landlord accounts
+// 04/10/2022 Keben: Worked on displaying error message when registering with existing email
+// 03/18/2022 Leny: Registration works with validation
 
 session_start();
 print_r($_SESSION);
@@ -53,13 +53,7 @@ if (isset($_POST['landlordReg'])) {
     $propertyTypes = ['Apartment', 'House', 'Mobile Home', 'Trailer Home', 'Condo', 'Studio'];
     if (in_array($Type, $propertyTypes)) {
         $validation = $db->prepare("SELECT Email FROM User Where Email =?");
-        $phoneValidation = $db->prepare("SELECT PhoneNumber FROM User Where PhoneNumber =?");
-        if (!$validation) {
-            echo "Error getting result: " . mysqli_error($db);
-            die();
-        }
         $validation->bind_param('s', $Email);
-        $phoneValidation->bind_param('s', $PhoneNumber);
         if ($validation->execute()) {
             if (mysqli_stmt_bind_result($validation, $res_Email)) {
                 $result_count = 0;
@@ -116,7 +110,7 @@ if (isset($_POST['landlordReg'])) {
                         $Type
                     );
                     if ($statement->execute()) {
-                        echo "Registered!";
+                        $_SESSION['success'] = 'Successfully registered!';
                         header("Location: ../views/login.php");
                     } else {
                         echo "Registration failed: " . mysqli_error($db);

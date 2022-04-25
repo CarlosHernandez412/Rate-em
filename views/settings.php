@@ -3,14 +3,17 @@
 session_start();
 print_r($_SESSION);
 
-if (!($_SESSION)) 
-  header("Location: ../views/login.php");
+if (!($_SESSION))
+    header("Location: ../views/login.php");
+else {
+    if (!($_SESSION['loggedProfile']))
+        header("Location: ../views/login.php");
+}
 ?>
 <html>
-<!--03/26-22 Keben created the landlord settings page-->
-<!-- 03/3/2022 - Leny: Combined tenant and landlord settings page into a single page file -->
-<!-- TO DO: LINE 136 -->
-</style>
+<!-- 03-26-22 Keben created the landlord settings page -->
+<!-- 04-21-22 Keben, Leny: Worked on account updates and tested -->
+<!-- 4-25-22 Keben, Leny: Worked on deleting an account and tested -->
 <title>Settings</title>
 
 <head>
@@ -39,9 +42,24 @@ if (!($_SESSION))
                     console.error(error);
                 });
         }
+
         function update() {
             args = {
                 "update": true
+            };
+            $.post("../config/updateAcc.php", args)
+                .done(function(result, status, xhr) {
+                    if (status == "success") {
+                        console.log(result);
+                    } else {
+                        console.error(result);
+                    }
+                })
+                .fail(function(xhr, status, error) {
+                    console.error(error);
+                });
+            args = {
+                "delete": true
             };
             $.post("../config/updateAcc.php", args)
                 .done(function(result, status, xhr) {
@@ -150,12 +168,19 @@ if (!($_SESSION))
     </div>
 
     <!-- Main content -->
-    <!-- TO DO: Create another file to handle updates on profile information -->
-    <form class="w3-container2" style="margin: 95px; color: whitesmoke;" action="../config/updateAcc.php">
+    <form method="post" class="w3-container2" style="margin: 95px; color: whitesmoke;" action="../config/updateAcc.php">
         <div class="w3-section">
             <div class="w3-center">
                 <h6><i><b>Password required</b> to update any account information.</i></h6>
                 <h6><i>That includes deleting the account!</i></h6>
+                <div style="color: red; font-weight: bold;"><?php if (isset($_SESSION["error"])) {
+                                                                print($_SESSION["error"]);
+                                                                unset($_SESSION["error"]);
+                                                            } ?></div>
+                <div style="color: green; font-weight: bold;"><?php if (isset($_SESSION["success"])) {
+                                                                    print($_SESSION["success"]);
+                                                                    unset($_SESSION["success"]);
+                                                                } ?></div>
                 <h4><b>Account Settings:</b></h4>
             </div>
             <label>
@@ -191,14 +216,14 @@ if (!($_SESSION))
         </div>
     </form>
     <!-- END MAIN -->
-  <!--Footer-->
-  <footer id="myFooter">
-    <div class="w3-container" style="background-color: #E5F2FF; color: black;">
-      <!-- w3-theme-l1"> -->
-      <h4>Rate 'Em</h4>
-      <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-    </div>
-  </footer>
+    <!--Footer-->
+    <footer id="myFooter">
+        <div class="w3-container" style="background-color: #E5F2FF; color: black;">
+            <!-- w3-theme-l1"> -->
+            <h4>Rate 'Em</h4>
+            <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+        </div>
+    </footer>
 </body>
 
 </html>

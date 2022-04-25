@@ -3,19 +3,18 @@
 session_start();
 print_r($_SESSION);
 
-if($_SESSION){
-  if($_SESSION['resultsProperties'] || $_SESSION['resultType'] || $_SESSION['resultsPrevRentals'] || $_SESSION['usersResults'] || $_SESSION['selectProfile']){
-    unset($_SESSION['resultsProperties']);
-    unset($_SESSION['resultType']);
-    unset($_SESSION['resultsPrevRentals']);
-    unset($_SESSION['usersResults']);
-    unset($_SESSION['selectProfile']);
-  }
+if (!($_SESSION)) {
+  header("Location: ../views/propertySearch.php");
+} else if($_SESSION){
+  if (!($_SESSION['usersResults']))
+    header("Location: ../views/propertySearch.php");
 }
 
 ?>
 <html>
 <!-- 04/08/2022 - Leny: Copy of myProfile.php, which is for logged in users, this file will be for profiles that have been searched -->
+<!-- TO DO: Get profile information for a searched user -->
+<!-- 04/16/2022 - Keben: Fixed Account Info -->
 
 <head>
   <title>Search Result</title>
@@ -49,27 +48,108 @@ if($_SESSION){
   </script>
 
   <style>
-  html,body,h1,h2,h3,h4,h5,h6 { font-family: "Roboto", sans-serif; }
+    html,
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "Roboto", sans-serif;
+    }
+
     /*CSS Theme Color Generataed */
-    .w3-theme-l5 { color: #000 !important; background-color: #eff7fb !important }
-    .w3-theme-l4 { color: #000 !important; background-color: #cae4f3 !important }
-    .w3-theme-l3 { color: #000 !important; background-color: #95cae6 !important }
-    .w3-theme-l2 { color: #fff !important; background-color: #60afda !important }
-    .w3-theme-l1 { color: #fff !important; background-color: #2f94ca !important }
-    .w3-theme-d1 { color: #fff !important; background-color: #1f6286 !important }
-    .w3-theme-d2 { color: #fff !important; background-color: #1c5777 !important }
-    .w3-theme-d3 { color: #fff !important; background-color: #184c68 !important }
-    .w3-theme-d4 { color: #fff !important; background-color: #154159 !important }
-    .w3-theme-d5 { color: #fff !important; background-color: #11364a !important }
-    .w3-theme-light { color: #000 !important; background-color: #eff7fb !important }
-    .w3-theme-dark { color: #fff !important; background-color: #11364a !important }
-    .w3-theme-action { color: #fff !important; background-color: #11364a !important }
-    .w3-theme { color: #fff !important; background-color: #236c93 !important }
-    .w3-text-theme { color: #236c93 !important }
-    .w3-border-theme { border-color: #236c93 !important }
-    .w3-hover-theme:hover { color: #fff !important; background-color: #236c93 !important }
-    .w3-hover-text-theme:hover { color: #236c93 !important }
-    .w3-hover-border-theme:hover { border-color: #236c93 !important }
+    .w3-theme-l5 {
+      color: #000 !important;
+      background-color: #eff7fb !important
+    }
+
+    .w3-theme-l4 {
+      color: #000 !important;
+      background-color: #cae4f3 !important
+    }
+
+    .w3-theme-l3 {
+      color: #000 !important;
+      background-color: #95cae6 !important
+    }
+
+    .w3-theme-l2 {
+      color: #fff !important;
+      background-color: #60afda !important
+    }
+
+    .w3-theme-l1 {
+      color: #fff !important;
+      background-color: #2f94ca !important
+    }
+
+    .w3-theme-d1 {
+      color: #fff !important;
+      background-color: #1f6286 !important
+    }
+
+    .w3-theme-d2 {
+      color: #fff !important;
+      background-color: #1c5777 !important
+    }
+
+    .w3-theme-d3 {
+      color: #fff !important;
+      background-color: #184c68 !important
+    }
+
+    .w3-theme-d4 {
+      color: #fff !important;
+      background-color: #154159 !important
+    }
+
+    .w3-theme-d5 {
+      color: #fff !important;
+      background-color: #11364a !important
+    }
+
+    .w3-theme-light {
+      color: #000 !important;
+      background-color: #eff7fb !important
+    }
+
+    .w3-theme-dark {
+      color: #fff !important;
+      background-color: #11364a !important
+    }
+
+    .w3-theme-action {
+      color: #fff !important;
+      background-color: #11364a !important
+    }
+
+    .w3-theme {
+      color: #fff !important;
+      background-color: #236c93 !important
+    }
+
+    .w3-text-theme {
+      color: #236c93 !important
+    }
+
+    .w3-border-theme {
+      border-color: #236c93 !important
+    }
+
+    .w3-hover-theme:hover {
+      color: #fff !important;
+      background-color: #236c93 !important
+    }
+
+    .w3-hover-text-theme:hover {
+      color: #236c93 !important
+    }
+
+    .w3-hover-border-theme:hover {
+      border-color: #236c93 !important
+    }
   </style>
 </head>
 
@@ -142,9 +222,9 @@ if($_SESSION){
             <p><i class="fa fa-envelope fa-fw w3-margin-right"></i><?php print($_SESSION['usersResults'][$_SESSION['selectProfile']]['Email']) ?></p>
             <?php
             if ($_SESSION) {
-              if ($_SESSION['Type'] === 'Landlord') {
+              if ($_SESSION['resultType'] === 'Landlord') {
                 echo "<p><i class=\"fa fa-home fa-fw w3-margin-right\"></i>Landlord</p>";
-              } else if ($_SESSION['Type'] === 'Tenant') {
+              } else if ($_SESSION['resultType'] === 'Tenant') {
                 echo "<p><i class=\"fa fa-home fa-fw w3-margin-right\"></i>Tenant</p>";
               }
             } else {
@@ -174,33 +254,33 @@ if($_SESSION){
               if ($_SESSION['resultType'] === 'Landlord') {
                 // If logged in as Landlord
                 echo "<p><h4>Listed Properties</h4></p>";
-                $properties = $_SESSION['myProperties'];
+                $properties = $_SESSION['resultsProperties'];
                 $numProperties = count($properties);
                 for ($i = 0; $i < $numProperties; $i++) {
-                  echo "<div style=\"font-size: 17px;\"><b>Property " . ($i + 1) . ":</b></div>";
-                  echo "Type: " . ($_SESSION['myProperties'][$i]['Type']) . "<br>";
-                  echo "State: " . ($_SESSION['myProperties'][$i]['State']) . "<br>";
-                  echo "City: " . ($_SESSION['myProperties'][$i]['City']) . "<br>";
-                  echo "Zipcode: " . ($_SESSION['myProperties'][$i]['Zipcode']) . "<br>";
-                  echo "Number of rooms: " . ($_SESSION['myProperties'][$i]['NumOfRooms']) . "<br>";
-                  echo "Number of bathrooms: " . ($_SESSION['myProperties'][$i]['NumOfBathrooms']) . "<br>";
-                  echo "Price: " . ($_SESSION['myProperties'][$i]['Price']) . "<br>";
+                  echo "<div style=\"font-size: 17px;\"><b>Property ".($i+1).":</b></div>";
+                  echo "Type: " . ($_SESSION['resultsProperties'][$i]['Type']) . "<br>";
+                  echo "State: " . ($_SESSION['resultsProperties'][$i]['State']) . "<br>";
+                  echo "City: " . ($_SESSION['resultsProperties'][$i]['City']) . "<br>";
+                  echo "Zipcode: " . ($_SESSION['resultsProperties'][$i]['Zipcode']) . "<br>";
+                  echo "Number of rooms: " . ($_SESSION['myPrresultsPropertiesoperties'][$i]['NumOfRooms']) . "<br>";
+                  echo "Number of bathrooms: " . ($_SESSION['resultsProperties'][$i]['NumOfBathrooms']) . "<br>";
+                  echo "Price: " . ($_SESSION['resultsProperties'][$i]['Price']) . "<br>";
                   echo "<br>";
                 }
               } else if ($_SESSION['resultType'] === 'Tenant') {
                 // If logged in as Tenant 
                 echo "<p><h4>Previous Rentals</h4></p>";
-                $rentals = $_SESSION['previousRentals'];
+                $rentals = $_SESSION['resultsPrevRentals'];
                 $numRentals = count($rentals);
                 for ($i = 0; $i < $numRentals; $i++) {
                   echo "<div style=\"font-size: 17px;\"><b>Property " . ($i + 1) . ":</b></div>";
-                  echo "Property Owner: " . ($_SESSION['previousRentals'][$i]['LEmail']) . "<br>";
-                  echo "Property Type: " . ($_SESSION['previousRentals'][$i]['Type']) . "<br>";
-                  echo "Property Location: " . ($_SESSION['previousRentals'][$i]['City']) . ", " . ($_SESSION['previousRentals'][$i]['State']) . "<br>";
-                  echo "Number of rooms: " . ($_SESSION['previousRentals'][$i]['NumOfRooms']) . "<br>";
-                  echo "Number of bathrooms: " . ($_SESSION['previousRentals'][$i]['NumOfBathrooms']) . "<br>";
-                  echo "Property Price: " . ($_SESSION['previousRentals'][$i]['Price']) . "<br>";
-                  echo "My Rental Rating: " . ($_SESSION['previousRentals'][$i]['Stars']) . "/5 <br>";
+                  echo "Property Owner: " . ($_SESSION['resultsPrevRentals'][$i]['LEmail']) . "<br>";
+                  echo "Property Type: " . ($_SESSION['resultsPrevRentals'][$i]['Type']) . "<br>";
+                  echo "Property Location: ".($_SESSION['resultsPrevRentals'][$i]['City']).", ".($_SESSION['resultsPrevRentals'][$i]['State'])."<br>";
+                  echo "Number of rooms: " . ($_SESSION['resultsPrevRentals'][$i]['NumOfRooms']) . "<br>";
+                  echo "Number of bathrooms: " . ($_SESSION['resultsPrevRentals'][$i]['NumOfBathrooms']) . "<br>";
+                  echo "Property Price: " . ($_SESSION['resultsPrevRentals'][$i]['Price']) . "<br>";
+                  echo "My Rental Rating: " . ($_SESSION['resultsPrevRentals'][$i]['Stars']) . "/5 <br>";
                   echo "<br>";
                 }
               }

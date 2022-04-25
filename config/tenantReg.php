@@ -78,7 +78,7 @@ if (isset($_POST['tenantReg'])) {
                     $hash
                 );
                 if ($statement->execute()) {
-                    echo "Registered!";
+                    $_SESSION['success'] = 'Successfully registered!';
                     header("Location: ../views/login.php");
                 } else {
                     echo "Registration failed: " . mysqli_error($db);

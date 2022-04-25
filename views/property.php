@@ -6,14 +6,17 @@ print_r($_SESSION);
 if (!($_SESSION)) 
   header("Location: ../views/login.php");
 else{
-    if ($_SESSION['Type'] === 'Tenant')
+    if (!($_SESSION['loggedProfile']))
+        header("Location: ../views/login.php");
+    elseif($_SESSION['Type'] === 'Tenant')
         header("Location: ../views/myProfile.php");
 }
 ?>
 <html>
-<!--03/17/2022 -Keben Carrillo: created the property page for Lanlord-->
-<!-- 4/10/2022 - Leny: Displaying all properties owned by the landlord and each property information-->
-<!-- TO DO: Allow users to edit/delete rows of their property list AND add new properties !PASSWORD WILL BE REQUIRED!-->
+<!-- 03/17/2022 Keben Carrillo: created the property page for Lanlord -->
+<!-- 04/10/2022 Leny: Displaying all properties owned by the landlord and each property information -->
+<!-- TO DO: Allow users to edit/delete rows of their property list AND add new properties !PASSWORD WILL BE REQUIRED! -->
+<!-- TO DO: Line 171 -->
 <title>My Properties</title>
 <head>
     <meta charset="UTF-8">
@@ -29,12 +32,27 @@ else{
 function logout() {
     args = { "logout": true };
     $.post("../config/accLogin.php", args)
-    .done(function (result, status, xhr) {
-        if (status == "success") { console.log(result); }
-        else { console.error(result); }
-    })
-    .fail(function (xhr, status, error) {
-      console.error(error);
+    .done(function(result, status, xhr) {
+        if (status == "success") {
+            console.log(result);
+        } else {
+            console.error(result);
+        }
+    }).fail(function(xhr, status, error) {
+        console.error(error);
+    });
+}
+function addTenant() {
+    args = { "addTenant": true };
+    $.post("../config/landlordSettings.php", args)
+    .done(function(result, status, xhr) {
+        if (status == "success") {
+            console.log(result);
+        } else {
+            console.error(result);
+        }
+    }).fail(function(xhr, status, error) {
+        console.error(error);
     });
 }
 </script>
@@ -121,6 +139,7 @@ function logout() {
             <div class="w3-center"><br>
                 <h6><i><b>Password required</b> to update any information.</i></h6>
                 <h6><i>That includes deleting!</i></h6>
+                <div style="color: red; font-weight: bold;"><?php if(isset($_SESSION["error"])) { print($_SESSION["error"]); unset($_SESSION["error"]); } ?></div>
                 <h4><b>My Properties:</b></h4>
             </div>
             <table style="width:100%">
@@ -190,17 +209,27 @@ function logout() {
                 $renters = $_SESSION['myRenters'];
                 $numRenters = count($renters);
                 for ($i=0; $i < $numRenters; $i++) { 
-                    echo "<tr>";
+                    echo "<tr id=\"update\">";
                     echo "<td>".($_SESSION['myRenters'][$i]['PropertyID'])."</td>";
                     echo "<td>".($_SESSION['myRenters'][$i]['TEmail'])."</td>";
                     echo "<td>".($_SESSION['myRenters'][$i]['Start'])."</td>";
                     if(is_null($_SESSION['myRenters'][$i]['End'])){
-                        echo "<td contentEditable=false>Currently Renting!</td>";
+                        echo "<td>Currently Renting!</td>";
                     }else{ 
-                        echo "<td contentEditable=false>".($_SESSION['myRenters'][$i]['End'])."</td>";
+                        echo "<td>".($_SESSION['myRenters'][$i]['End'])."</td>";
                     }
-                    echo "<td>".($_SESSION['myRenters'][$i]['Stars'])."</td>";
-                    echo "</tr>";
+                    if(is_null($_SESSION['myRenters'][$i]['Stars'])){
+                        echo "<td contentEditable=false>Waiting for rating..!</td>";
+                    }else{ 
+                        echo "<td contentEditable=false>".($_SESSION['myRenters'][$i]['Stars'])."</td>";
+                    }
+                    // TO FIX: Edit button in another row only allows the first row to be changed
+                    echo "<th contentEditable=false style=\"width: 7%;\"><button id=\"change\" onclick=\"updateProperty()\"
+                    class=\"w3-round-xlarge\" style=\"background-color: lightblue;\" type=\"button\">Edit</button>
+                    <button onclick=\"deleteProperty()\" class=\"w3-round-xlarge\" style=\"background-color: lightcoral;\"
+                    type=\"button\">DELETE</button>
+                    </th>
+                    </tr>";
                 }
                 ?>
             </table>
@@ -240,7 +269,7 @@ function logout() {
             </div>
 
             <!-- TO DO: Create another file to handle new properties being added -->
-            <form class="w3-container" action="../config/landlordReg.php" method="post">
+            <form class="w3-container" action="../config/landlordSettings.php" method="post">
                 <div class="w3-section">
                     <label><h6><b>*State</b></h6></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the state the property is in"
@@ -297,28 +326,26 @@ function logout() {
                 </label>
             </div>
 
-            <!-- TO DO: Create another file to handle new renters being added 
-                    th>Property ID</th>
-                    <th>Tenant</th>
-                    <th>Start-Date</th>
-                    <th>End-Date</th>
-        -->
-            <form class="w3-container" action="../config/landlordReg.php" method="post">
+            <form class="w3-container" action="../config/landlordSettings.php" method="post">
                 <div class="w3-section">
                     <label><h6><b>*Property ID - refer to "My Properties" Table </b></h6></label>
-                    <input class="w3-input w3-border w3-margin-bottom" type="number" min="0" name="propID" required>
+                    <input class="w3-input w3-border w3-margin-bottom" type="number" min="0" name="propID" 
+                        value="<?php print($_SESSION["PropID"]); unset($_SESSION["PropID"]); ?>" required>
                     <label><h6><b>*Tenant</b></h6></label>
-                    <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Enter the tenant's email" name="tEmail" required>
+                    <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Enter the tenant's email" name="tEmail" 
+                        value="<?php print($_SESSION["TEmail"]); unset($_SESSION["TEmail"]); ?>" required>
                     <label><h6><b>*Start-Date</b></h6></label>
-                    <input class="w3-input w3-border w3-margin-bottom" type="date" placeholder="Enter the start date" name="startDate" required>
-                    <label><h6><b>*End-Date</b></h6></label>
-                    <input class="w3-input w3-border w3-margin-bottom" type="date" placeholder="Enter the end date" name="endDate" required>
-                    <label class="w3-center"><h6><b><i>The rating will be 0 until the tenant gives a rating!</i></b></h6></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="date" placeholder="Enter the start date" name="startDate" 
+                        value="<?php print($_SESSION["StartDate"]); unset($_SESSION["StartDate"]); ?>" required>
+                    <label><h6><b>End-Date</b></h6></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="date" placeholder="Enter the end date" name="endDate"
+                        value="<?php print($_SESSION["EndDate"]); unset($_SESSION["EndDate"]); ?>">
+                    <label class="w3-center"><h6><b><i>The rating will be updated when the tenant gives a rating!</i></b></h6></label>
                     <label><h6><b>*Current Password</b></h6></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="password" placeholder="Enter Current Password" 
                         name="psw" required>
                     <div class="w3-center">
-                        <button class="w3-button w3-center w3-green w3-round-xxlarge w3-section w3-padding" style="width:50%" type="submit">Submit</button>
+                        <button class="w3-button w3-center w3-green w3-round-xxlarge w3-section w3-padding" style="width:50%" type="submit" name="addTenant">Submit</button>
                     </div>
                     <div class="w3-center">
                         <button onclick="document.getElementById('id02').style.display='none'" style="width:50%" type="button" 

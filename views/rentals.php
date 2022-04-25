@@ -6,12 +6,14 @@ print_r($_SESSION);
 if (!($_SESSION)) 
   header("Location: ../views/login.php");
 else{
-    if ($_SESSION['Type'] === 'Landlord')
+    if (!($_SESSION['loggedProfile']))
+        header("Location: ../views/login.php");
+    elseif($_SESSION['Type'] === 'Landlord')
         header("Location: ../views/myProfile.php");
 }
 ?>
 <html>
-<!-- 4/14/2022 - Leny: Created a page for any previous rentals or current rentals so tenants can give ratings -->
+<!-- 4/14/2022 Leny: Created a page for any previous rentals or current rentals so tenants can give ratings -->
 <!-- TO DO: Allow users to give a rating to previous rentals !PASSWORD WILL BE REQUIRED!-->
 <!-- TO DO: FIX 147 -->
 <title>My Rentals</title>

@@ -5,11 +5,15 @@ print_r($_SESSION);
 
 if (!($_SESSION)) 
   header("Location: ../views/login.php");
+else{
+    if (!($_SESSION['loggedProfile']))
+        header("Location: ../views/login.php");
+}
 ?>
 <html>
-<!-- 03/3/2022 - Leny: Combined tenant and landlord pages into a single profile page file will work to display proper information later -->
+<!-- 03/3/2022 Leny: Combined tenant and landlord pages into a single profile page file will work to display proper information later -->
 <!-- 4-4-22 - Keben Added logout button-->
-<!-- TO DO: Continue getting profile information for logged in accounts (tenant's previous rentals/ratings/comments) -->
+<!-- TO DO: Continue getting profile information for logged in accounts (ratings/comments) -->
 
 <head>
   <title>My Profile</title>
@@ -134,7 +138,7 @@ if (!($_SESSION))
             ?>
             
             <!-- Direct to a more detailed rating of the acocunt -->
-            <a href="../views/detailedReview.html">Overall Rating</a>
+            <a href="../views/detailedReview.php">Overall Rating</a>
             <p><i> <span class="fa fa-star checked"></span>
                 <span class="fa fa-star checked"></span>
                 <span class="fa fa-star checked"></span>

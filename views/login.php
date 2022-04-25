@@ -3,10 +3,15 @@
 session_start();
 print_r($_SESSION);
 
+if ($_SESSION) {
+  if ($_SESSION['loggedProfile'])
+    header("Location: ../views/myProfile.php");
+}
 ?>
 <html lang="en">
-<!-- 03/17/2022 - Leny: Created login -->
-<!-- 04/07/2022 LENY: Nav bar is complete -->
+<!-- 03/17/2022 Leny: Created login -->
+<!-- 04/07/2022 Leny: Nav bar is complete -->
+<!-- 04/23/2022 Leny: Allow users to update their passwords -->
 <title>Login</title>
 <head>
   <meta charset="UTF-8">
@@ -77,6 +82,7 @@ print_r($_SESSION);
       <div class="w3-center"><br>
         <h3><b>Welcome back!</b></h3>
         <div style="color: red; font-weight: bold;"><?php if(isset($_SESSION["error"])) { print($_SESSION["error"]); unset($_SESSION["error"]); } ?></div>
+        <div style="color: green; font-weight: bold;"><?php if(isset($_SESSION["success"])) { print($_SESSION["success"]); unset($_SESSION["success"]); } ?></div>
       </div>
       
       <form class="w3-container" action="../config/accLogin.php" method="post">
@@ -95,11 +101,57 @@ print_r($_SESSION);
 
     <div class="w3-center w3-modal-content w3-card-4 w3-container w3-padding-16"
       style="max-width:600px; background-color: #E5F2FF; bottom: 15px;">
-      <span class="w3-hide-small">Forgot <a href="#">password?</a>
+      <span class="w3-hide-small">Forgot <a href="#" onclick="document.getElementById('id01').style.display='block'">Password?</a>
         / Need to <a href="../views/register.php">Register?</a></span>
     </div>
         <!-- END MAIN -->
   </div>
+
+  <div id="id01" class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+    
+            <div class="w3-center"><br>
+                <span onclick="document.getElementById('id01').style.display='none'"
+                    class="w3-button w3-transparent w3-xlarge w3-display-topright" title="Close Modal">x</span>
+                <label>
+                    <h4><b>Forgot password?</b></h4>
+                    <h6><b><i>We want to make sure it is you!</i></b></h6>
+                </label>
+            </div>
+    
+            <form class="w3-container" action="../config/changePassword.php" method="post">
+                <div class="w3-section">
+                    <label><b>*First Name</b></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter First Name"
+                        value="<?php print($_SESSION["first"]); unset($_SESSION["first"]); ?>" name="fname" required>
+                    <label><b>Middle Name</b></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Middle Name"
+                        value="<?php print($_SESSION["mi"]); unset($_SESSION["mi"]); ?>" name="mname">
+                    <label><b>*Last Name</b></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Last Name"
+                        value="<?php print($_SESSION["last"]); unset($_SESSION["last"]); ?>" name="lname" required>
+                    <label><b>*Phone Number</b></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Phone Number"
+                        value="<?php print($_SESSION["num"]); unset($_SESSION["num"]); ?>" name="phonenum" required>
+                    <label><b>*Email</b></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Enter Email" 
+                        value="<?php print($_SESSION["email"]); unset($_SESSION["email"]); ?>" name="email" required>
+                    <label><b>*New Password</b></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="password" placeholder="Enter New Password" 
+                      name="newPSW" required>
+                    <label><b>*Confirm New Password</b></label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="password" placeholder="Re-Enter New Password" 
+                      name="confirmPSW" required>
+                    <button class="w3-button w3-round-xxlarge w3-block w3-green w3-section w3-padding" type="submit" name="changePass">Submit</button>
+                </div>
+            </form>
+            <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+                <button onclick="document.getElementById('id01').style.display='none'" type="button"
+                    class="w3-button w3-red">Cancel</button>
+                <span class="w3-right w3-padding w3-hide-small">Need to <a href="../views/register.php">Register?</a></span>
+            </div>
+        </div>
+    </div>
 
     <footer id="myFooter">
       <div class="w3-container w3-bottom" style="background-color: #E5F2FF;">

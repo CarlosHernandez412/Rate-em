@@ -1,8 +1,9 @@
 <?php
 
 session_start();
-print_r($_SESSION);
 
+if (!($_SESSION)) 
+  header("Location: ../views/propertySearch.php");
 ?>
 <html>
 <!-- 03/3/2022 - Leny: Fixed comment container and footer -->
@@ -158,6 +159,7 @@ color: orange;
 
 <!-- Page Container: My Profile and Related searches and Comments -->
 <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px;">
+  <div class="w3-center"><h4>In Progress..this is what the team is going for.</h4></div>
   <!-- The Grid -->
   <div class="w3-row" style="padding-left: 250px;">
     <!-- Middle Column -->

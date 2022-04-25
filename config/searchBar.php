@@ -81,9 +81,8 @@ if (isset($_POST["search"])) {
           $_SESSION["usersResults"] = $result;
           $_SESSION["resultsPrevRentals"] = $resultsPrevRentals;
           $_SESSION['resultType'] = "Tenant";
-          header("Location: ../views/propertySearch.php");
-          //header("Location: ../views/userResults.php");
-        } else {
+          header("Location: ../views/userSearch.php");
+        } else if ($landlordAcc > 0) {
           $query = $db->prepare("SELECT * FROM Property NATURAL JOIN PropertyType Where LEmail =?");
           $query->bind_param('s', $result[0]["Email"]);
           $query->execute();
@@ -96,9 +95,10 @@ if (isset($_POST["search"])) {
           $_SESSION["usersResults"] = $result;
           $_SESSION["resultsProperties"] = $propertyList;
           $_SESSION['resultType'] = "Landlord";
-          header("Location: ../views/propertySearch.php");
-          //header("Location: ../views/userResults.php");
+          header("Location: ../views/userSearch.php");
         }
+      } else {
+        header("Location: ../views/home.php");
       }
     } else {
       header("Location: ../views/home.php");
@@ -109,6 +109,7 @@ if (isset($_POST["search"])) {
 } else {
   header("Location: ../views/home.php");
 }
+
 if (isset($_POST["zipcodeAgain"]) && !empty($_POST["zipcodeAgain"]) && is_numeric($_POST["zipcodeAgain"])) {
   $db = getConnected();
   $Zipcode = $_POST["zipcodeAgain"];
@@ -139,7 +140,4 @@ if (isset($_POST["zipcodeAgain"]) && !empty($_POST["zipcodeAgain"]) && is_numeri
   $_SESSION["usersResults"] = $LandlordResult;
   $_SESSION['resultType'] = "Landlord";
   header("Location: ../views/propertySearch.php");
-} else {
-  header("Location: ../views/propertySearch.php");
 }
-?>

@@ -3,13 +3,17 @@
 session_start();
 print_r($_SESSION);
 
+if ($_SESSION) {
+    if ($_SESSION['loggedProfile'])
+      header("Location: ../views/myProfile.php");
+}
 ?>
 <html>
 <!--03/17/2022 -Keben Carrillo: created Register Page-->
 <!--03/19/2022 -Keben Carrillo: I was able to fix the whole page background to fill 
                                 when in full screen-->
-<!--03/19/2022 - Leny: Created the forms for tenant and landlord -->
-<!-- 04/07/2022 LENY: Nav bar is complete -->
+<!-- 03/19/2022 Leny: Created the forms for tenant and landlord -->
+<!-- 04/07/2022 Leny: Nav bar is complete -->
 <!--4/10/22 Keben: Worked on displaying error message when registering with existing email-->
 <title>Account Selection</title>
 <head>
@@ -106,6 +110,7 @@ print_r($_SESSION);
     <div class="container">
         <div class="row">
             <div style="color: red; font-weight: bold;"><?php if(isset($_SESSION["reg_error"])) { print($_SESSION["reg_error"]); unset($_SESSION["reg_error"]); } ?></div>
+            <div style="color: green; font-weight: bold;"><?php if(isset($_SESSION["success"])) { print($_SESSION["success"]); unset($_SESSION["success"]); } ?></div>
             <h2 style="text-align:center">Welcome to Rate 'Em</h2>
             <h3 style="text-align:center">Register as...</h3>
             <div class="vl">
