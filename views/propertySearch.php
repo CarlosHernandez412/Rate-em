@@ -8,7 +8,7 @@ print_r($_SESSION);
 <!-- 3/28/2022 Laura: Created a new page for search results and filters -->
 <!-- Carlos: Need to fix Geomap from colliding with search filters -->
 <!-- 4/01/2022 Laura: Fixed collision with geomap and search filter and redesigned filtering -->
-<!-- -->
+<!-- 4/13/2022 Laura: Made section of results clickable & made changes to filters -->
 
 <head>
   <title>propertySearch</title>
@@ -162,33 +162,31 @@ print_r($_SESSION);
   <div class="dropdown" style="position: fixed; left: 200px; top: 60px">
     <button class="dropbtn" onclick="myFunction('Home Type')">Home Type</button>
     <div id="myDropdown" class="dropdown-content">
-      <!-- Bedroom Selection -->
-      <!--<div tabindex="-1" style="position: relative" for="bedrooms">-->
-      <legend>Home Type</legend>
-      <input type="checkbox" onClick="toggle(this)" name=homeType[] form="search-form" />Select All</legend><br>
-      <input type="checkbox" id="houses" name="homeType" value="" form="search-form">
+    <legend>Home Type</legend>
+      <input type="checkbox" onclick="toggle(this)" onclick="myFunction('propertyType[]')" name="propertyType[]" form="search-form"/>Select All</legend><br>
+      <input type="checkbox" id="check" name="propertyType[]" value="house" form="search-form" >
       <label for="houses">Houses</label><br>
-      <input type="checkbox" id="apartments" name="homeType" value="" form="search-form">
+      <input type="checkbox" id="check" name="propertyType[]" value="apartment" form="search-form">
       <label for="apartments">Apartments</label><br>
-      <input type="checkbox" id="condos" name="homeType" value="" form="search-form">
+      <input type="checkbox" id="check" name="propertyType[]" value="condo" form="search-form">
       <label for="condos">Condos</label><br>
-      <input type="checkbox" id="studios" name="homeType" value="" form="search-form">
+      <input type="checkbox" id="check" name="propertyType[]" value="studio" form="search-form">
       <label for="studio">Studios</label><br>
-      <input type="checkbox" id="trailers" name="homeType" value="" form="search-form">
+      <input type="checkbox" id="check" name="propertyType[]" value="trailer" form="search-form">
       <label for="trailers">Trailers</label><br>
-      <input type="checkbox" id="mobiles" name="homeType" value="" form="search-form">
+      <input type="checkbox" id="check" name="propertyType[]" value="mobile" form="search-form">
       <label for="mobiles">Mobile Homes</label><br>
-      <button class="btn" id="btn-search" type="submit" name="filter">Done</button>
     </div>
   </div>
   <!-- End of Home Type Selection -->
   <!-- Beds Selection -->
+  <!--
   <div class="dropdown" style="position: fixed; left: 302px; top: 60px">
     <button class="dropbtn" onclick="myFunction('Beds & Baths')">Beds & Baths</button>
-    <div id="myDropdown" class="dropdown-content">
+    <div id="myDropdown" class="dropdown-content">-->
       <!-- Bedroom Selection -->
       <!--<div tabindex="-1" style="position: relative" for="bedrooms">-->
-      <fieldset class="bed-filter">
+      <!--<fieldset class="bed-filter">
         <legend>Bedrooms</legend>
         <div name="beds-option" class="buttonStyle" role="group">
           <button aria-pressed="false" class="buttonStyle" onclick="filterSelection('any')" form="search-form"> Any </button>
@@ -197,9 +195,9 @@ print_r($_SESSION);
           <button aria-pressed="false" class="buttonStyle" onclick="filterSelection('3+')" form="search-form"> 3+ </button>
           <button aria-pressed="false" class="buttonStyle" onclick="filterSelection('4+')" form="search-form"> 4+ </button>
         </div>
-      </fieldset>
+      </fieldset>-->
       <!-- Bathroom Selection -->
-      <fieldset>
+      <!-- <fieldset>
         <legend>Bathrooms</legend>
         <div name="beds-option" class="buttonStyle" role="group">
           <button aria-pressed="false" class="buttonStyle" onclick="filterSelection('any')" form="search-form"> Any </button>
@@ -211,10 +209,10 @@ print_r($_SESSION);
       </fieldset>
       <button class="btn" id="btn-search" type="submit" name="filter">Done</button>
     </div>
-  </div>
+  </div> -->
   <!-- End of Beds Selection -->
   <!-- Price Selection -->
-  <div class="dropdown" style="position: fixed; left: 416px; top: 60px">
+  <!-- <div class="dropdown" style="position: fixed; left: 416px; top: 60px">
     <button class="dropbtn" onclick="myFunction('Price')">Price</button>
     <div id="myDropdown" class="dropdown-content">
       <fieldset class="price-filter">
@@ -235,15 +233,16 @@ print_r($_SESSION);
           </div>
         </div>
       </fieldset>
-      <button class="btn" id="btn-search" type="submit" name="filter">Done</button>
+      <button class="btn" id="btn-search" type="submit" name="filter">Done</button> -->
       <!-- End of price selection -->
+
     </div>
   </div>
   </section>
 
   <script>
     function toggle(source) {
-      checkboxes = document.getElementsByName('homeType');
+      checkboxes = document.getElementsByName('propertyType[]');
       for (var i = 0, n = checkboxes.length; i < n; i++) {
         checkboxes[i].checked = source.checked;
       }
@@ -334,21 +333,21 @@ print_r($_SESSION);
     </script>
   </div>-->
   <!-- Section for results -->
+
   <?php
   if ($_SESSION) {
     if ($_SESSION['usersResults']) {
       $results = $_SESSION['usersResults'];
       $resultLength = count($results);
       for ($i = 0; $i < $resultLength; $i++) {
-        echo "<div class=\"w3-container w3-card-4 w3-round w3-margin\" style=\"height:90px;width:450px; background-color: #E5F2FF; color:black;
+        //echo "<a href=../views/resultProfile.php <div class=\"w3-container w3-card-4 w3-round w3-margin\" style=\"height:80px;width:450px; background-color: #E5F2FF; color:black;
+        //position: absolute; right: 200;\">";
+        echo "<a href=../views/resultProfile.php <div class=\"w3-container w3-card-4 w3-round w3-margin\" style=\"height:90px;width:450px; background-color: #E5F2FF; color:black;
         position:absolute; top:20%; left:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%)\">";
-        echo ($_SESSION['usersResults'][$i]['FName'])." ".($_SESSION['usersResults'][$i]['MI'])." ".($_SESSION['usersResults'][$i]['LName'])."<br>";
+        echo ($_SESSION['usersResults'][$i]['FName'])." ".($_SESSION['usersResults'][$i]['MI']). " " .($_SESSION['usersResults'][$i]['LName'])."<br>";
         echo "<i class=\"fa fa-home fa-fw w3-margin-right\"></i>".($_SESSION['resultType'])."</br>";
         echo "<i class=\"fa fa-envelope fa-fw w3-margin-right\"></i>".($_SESSION['usersResults'][$i]['Email'])."<br>";
-        ?>
-        <a href="../views/resultProfile.php"> Check out my profile for my property information!</a>
-        <?php
-        echo "</div>";
+        echo "</div></a>";
         $_SESSION['selectProfile'] = $i;
       }
     }

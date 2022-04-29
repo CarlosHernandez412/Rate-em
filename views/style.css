@@ -211,3 +211,23 @@ input[type=text] {
   .checked {
     color: orange;
   }
+
+ /* Any messages */
+ .success, .warning {
+  margin: 10px 0px;
+  padding:12px;
+   
+  }
+  .success {
+      color: #4F8A10;
+      background-color: #DFF2BF;
+  }
+  .warning {
+      color: #D8000C;
+      background-color: #FFD2D2;
+  }
+  .success i, .warning i {
+      margin:5px 12px;
+      font-size:2em;
+      vertical-align:middle;
+  }

@@ -3,17 +3,19 @@
 session_start();
 print_r($_SESSION);
 
-if (!($_SESSION)) 
+if (!($_SESSION))
   header("Location: ../views/login.php");
-else{
-    if (!($_SESSION['loggedProfile']))
-        header("Location: ../views/login.php");
+else {
+  if (!($_SESSION['loggedProfile']))
+    header("Location: ../views/login.php");
 }
 ?>
 <html>
 <!-- 03/3/2022 Leny: Combined tenant and landlord pages into a single profile page file will work to display proper information later -->
 <!-- 4-4-22 - Keben Added logout button-->
-<!-- TO DO: Continue getting profile information for logged in accounts (ratings/comments) -->
+<!-- 4-25-2022 Laura: Real time for user comments to display how long ago a post was posted -->
+<!-- 4-27-2022 Keben: Got comments displaying-->
+<!-- CH added ratings being displayed on page from db -->
 
 <head>
   <title>My Profile</title>
@@ -47,29 +49,108 @@ else{
   </script>
 
   <style>
-    html, body, h1, h2, h3, h4, h5,h6 { font-family: "Roboto", sans-serif; }
+    html,
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "Roboto", sans-serif;
+    }
 
     /*CSS Theme Color Generataed */
-    .w3-theme-l5 { color: #000 !important; background-color: #eff7fb !important }
-    .w3-theme-l4 { color: #000 !important; background-color: #cae4f3 !important }
-    .w3-theme-l3 { color: #000 !important; background-color: #95cae6 !important }
-    .w3-theme-l2 { color: #fff !important; background-color: #60afda !important }
-    .w3-theme-l1 { color: #fff !important; background-color: #2f94ca !important }
-    .w3-theme-d1 { color: #fff !important; background-color: #1f6286 !important }
-    .w3-theme-d2 { color: #fff !important; background-color: #1c5777 !important }
-    .w3-theme-d3 { color: #fff !important; background-color: #184c68 !important }
-    .w3-theme-d4 { color: #fff !important; background-color: #154159 !important }
-    .w3-theme-d5 { color: #fff !important; background-color: #11364a !important }
-    
-    .w3-theme-light { color: #000 !important; background-color: #eff7fb !important }
-    .w3-theme-dark { color: #fff !important; background-color: #11364a !important }
-    .w3-theme-action { color: #fff !important; background-color: #11364a !important }
-    .w3-theme { color: #fff !important; background-color: #236c93 !important }
-    .w3-text-theme { color: #236c93 !important }
-    .w3-border-theme { border-color: #236c93 !important }
-    .w3-hover-theme:hover { color: #fff !important; background-color: #236c93 !important }
-    .w3-hover-text-theme:hover { color: #236c93 !important }
-    .w3-hover-border-theme:hover { border-color: #236c93 !important }
+    .w3-theme-l5 {
+      color: #000 !important;
+      background-color: #eff7fb !important
+    }
+
+    .w3-theme-l4 {
+      color: #000 !important;
+      background-color: #cae4f3 !important
+    }
+
+    .w3-theme-l3 {
+      color: #000 !important;
+      background-color: #95cae6 !important
+    }
+
+    .w3-theme-l2 {
+      color: #fff !important;
+      background-color: #60afda !important
+    }
+
+    .w3-theme-l1 {
+      color: #fff !important;
+      background-color: #2f94ca !important
+    }
+
+    .w3-theme-d1 {
+      color: #fff !important;
+      background-color: #1f6286 !important
+    }
+
+    .w3-theme-d2 {
+      color: #fff !important;
+      background-color: #1c5777 !important
+    }
+
+    .w3-theme-d3 {
+      color: #fff !important;
+      background-color: #184c68 !important
+    }
+
+    .w3-theme-d4 {
+      color: #fff !important;
+      background-color: #154159 !important
+    }
+
+    .w3-theme-d5 {
+      color: #fff !important;
+      background-color: #11364a !important
+    }
+
+    .w3-theme-light {
+      color: #000 !important;
+      background-color: #eff7fb !important
+    }
+
+    .w3-theme-dark {
+      color: #fff !important;
+      background-color: #11364a !important
+    }
+
+    .w3-theme-action {
+      color: #fff !important;
+      background-color: #11364a !important
+    }
+
+    .w3-theme {
+      color: #fff !important;
+      background-color: #236c93 !important
+    }
+
+    .w3-text-theme {
+      color: #236c93 !important
+    }
+
+    .w3-border-theme {
+      border-color: #236c93 !important
+    }
+
+    .w3-hover-theme:hover {
+      color: #fff !important;
+      background-color: #236c93 !important
+    }
+
+    .w3-hover-text-theme:hover {
+      color: #236c93 !important
+    }
+
+    .w3-hover-border-theme:hover {
+      border-color: #236c93 !important
+    }
   </style>
 </head>
 
@@ -119,8 +200,8 @@ else{
         <!-- Profile Page on top left side -->
         <div class="w3-card-4 w3-round #2f94ca w3-theme">
           <div class="w3-container">
-            <h4 id="accountName" class="w3-center"><?php print_r($_SESSION['loggedProfile']['FName']).print_r(" ").print_r($_SESSION['loggedProfile']['MI'])
-            .print_r(" ").print_r($_SESSION['loggedProfile']['LName']) ?></h4>
+            <h4 id="accountName" class="w3-center"><?php print_r($_SESSION['loggedProfile']['FName']) . print_r(" ") . print_r($_SESSION['loggedProfile']['MI'])
+                                                      . print_r(" ") . print_r($_SESSION['loggedProfile']['LName']) ?></h4>
             <p class="w3-center"><img src="../images/profile4.png" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
             <hr>
 
@@ -136,21 +217,27 @@ else{
               header("Location: ../views/login.php");
             }
             ?>
-            
+
             <!-- Direct to a more detailed rating of the acocunt -->
+            <!--CH created Direct to a more detailed rating of the acocunt -->
             <a href="../views/detailedReview.php">Overall Rating</a>
-            <p><i> <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-              </i></p>
+            <?php
+            //display users overall rating/5
+            if ($_SESSION) {
+              if ($_SESSION['userRating']['TotalRating']) {
+                $ratings = $_SESSION['userRating']['TotalRating'];
+                $ratings = round($ratings, 1);
+                echo ": ", $ratings, "/5", "<br><br>";
+              } else {
+                echo ": No ratings yet..<br>";
+              }
+            } else {
+              echo "<br><br>";
+            }
+            ?>
           </div>
         </div>
-        <br>
-
-        <br>
-
+        <br><br>
         <!-- Related Searches -->
         <div class="w3-card w3-round #2f94ca w3-theme w3-hide-small">
           <div class="w3-container">
@@ -161,13 +248,13 @@ else{
                 echo "<p><h4>Listed Properties</h4></p>";
                 $properties = $_SESSION['myProperties'];
                 $numProperties = count($properties);
-                for ($i=0; $i < $numProperties; $i++) { 
-                  echo "<div style=\"font-size: 17px;\"><b>Property ".($i+1).":</b></div>";
-                  echo "Type: ".($_SESSION['myProperties'][$i]['Type'])."<br>";
-                  echo "Property Location: ".($_SESSION['myProperties'][$i]['Zipcode'])." ".($_SESSION['myProperties'][$i]['City']).", ".($_SESSION['myProperties'][$i]['State'])."<br>";
-                  echo "Number of rooms: ".($_SESSION['myProperties'][$i]['NumOfRooms'])."<br>";
-                  echo "Number of bathrooms: ".($_SESSION['myProperties'][$i]['NumOfBathrooms'])."<br>";
-                  echo "Price: ".($_SESSION['myProperties'][$i]['Price'])."<br>";
+                for ($i = 0; $i < $numProperties; $i++) {
+                  echo "<div style=\"font-size: 17px;\"><b>Property " . ($i + 1) . ":</b></div>";
+                  echo "Type: " . ($_SESSION['myProperties'][$i]['Type']) . "<br>";
+                  echo "Property Location: " . ($_SESSION['myProperties'][$i]['Zipcode']) . " " . ($_SESSION['myProperties'][$i]['City']) . ", " . ($_SESSION['myProperties'][$i]['State']) . "<br>";
+                  echo "Number of rooms: " . ($_SESSION['myProperties'][$i]['NumOfRooms']) . "<br>";
+                  echo "Number of bathrooms: " . ($_SESSION['myProperties'][$i]['NumOfBathrooms']) . "<br>";
+                  echo "Price: " . ($_SESSION['myProperties'][$i]['Price']) . "<br>";
                   echo "<br>";
                 }
               } else if ($_SESSION['Type'] === 'Tenant') {
@@ -175,15 +262,15 @@ else{
                 echo "<p><h4>Previous Rentals</h4></p>";
                 $rentals = $_SESSION['previousRentals'];
                 $numRentals = count($rentals);
-                for ($i=0; $i < $numRentals; $i++) { 
-                  echo "<div style=\"font-size: 17px;\"><b>Property ".($i+1).":</b></div>";
-                  echo "Property Owner: ".($_SESSION['previousRentals'][$i]['LEmail'])."<br>";
-                  echo "Property Type: ".($_SESSION['previousRentals'][$i]['Type'])."<br>";
-                  echo "Property Location: ".($_SESSION['previousRentals'][$i]['City']).", ".($_SESSION['previousRentals'][$i]['State'])."<br>";
-                  echo "Number of rooms: ".($_SESSION['previousRentals'][$i]['NumOfRooms'])."<br>";
-                  echo "Number of bathrooms: ".($_SESSION['previousRentals'][$i]['NumOfBathrooms'])."<br>";
-                  echo "Property Price: ".($_SESSION['previousRentals'][$i]['Price'])."<br>";
-                  echo "My Rental Rating: ".($_SESSION['previousRentals'][$i]['Stars'])."/5 <br>";
+                for ($i = 0; $i < $numRentals; $i++) {
+                  echo "<div style=\"font-size: 17px;\"><b>Property " . ($i + 1) . ":</b></div>";
+                  echo "Property Owner: " . ($_SESSION['previousRentals'][$i]['LEmail']) . "<br>";
+                  echo "Property Type: " . ($_SESSION['previousRentals'][$i]['Type']) . "<br>";
+                  echo "Property Location: " . ($_SESSION['previousRentals'][$i]['City']) . ", " . ($_SESSION['previousRentals'][$i]['State']) . "<br>";
+                  echo "Number of rooms: " . ($_SESSION['previousRentals'][$i]['NumOfRooms']) . "<br>";
+                  echo "Number of bathrooms: " . ($_SESSION['previousRentals'][$i]['NumOfBathrooms']) . "<br>";
+                  echo "Property Price: " . ($_SESSION['previousRentals'][$i]['Price']) . "<br>";
+                  echo "My Rental Rating: " . ($_SESSION['previousRentals'][$i]['Stars']) . "/5 <br>";
                   echo "<br>";
                 }
               }
@@ -202,84 +289,89 @@ else{
         <div class="w3-row-padding">
           <div class="w3-col m12">
             <div class="w3-card w3-round w3-theme">
-              <?php
-              if ($_SESSION) {
-                echo "<div class=\"w3-container w3-padding\">
-            <h6>Want to leave a comment?</h6>
-            <p contentEditable=true class=\"w3-border w3-padding w3-white\"></p>
-            <button type=\"button\" class=\"w3-button\"><i class=\"fa fa-pencil\"></i>  Post</button> ";
-              } else {
-                echo "<div class=\"w3-container w3-padding\">
-            <h6>Sign in or register to leave comments!</h6>
-            <p contentEditable=false class=\"w3-border w3-padding w3-white\"></p>
-            <button type=\"button\" class=\"w3-button\"><i class=\"fa fa-pencil\"></i>  Post</button>";
-              }
-              ?>
             </div>
           </div>
         </div>
+
+        <?php
+        function elapsed_time($date, $full = false)
+        {
+          $now = new DateTime();
+          $ago = new DateTime($date);
+          $diff = $now->diff($ago);
+
+          $diff->w = floor($diff->d / 7);
+          $diff->d -= $diff->w * 7;
+
+          $string = array(
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+          );
+          foreach ($string as $time => &$newtime) {
+            if ($diff->$time) {
+              $newtime = $diff->$time . ' ' . $newtime . ($diff->$time > 1 ? 's' : '');
+            } else {
+              unset($string[$time]);
+            }
+          }
+
+          if (!$full) $string = array_slice($string, 0, 1);
+          return $string ? implode(', ', $string) . ' ago' : 'just now';
+        }
+
+        if ($_SESSION) {
+          if ($_SESSION['userComments']) {
+            $likes = 0;
+            $dislikes = 0;
+            $cRating = $_SESSION['commentRatings'];
+            $numcRatings = count($cRating);
+            $comments = $_SESSION['userComments'];
+            $numComments = count($comments);
+            for ($i = 0; $i < $numComments; $i++) {
+              $date = $_SESSION['userComments'][$i]['Date'];
+              $commentTime = elapsed_time($date);
+              for ($j = 0; $j < $numcRatings; $j++) {
+                if (($_SESSION['userComments'][$i]['CommentID']) === ($_SESSION['commentRatings'][$j]['CommentID'])) {
+                  $_SESSION['SharedCommentID'] = ($_SESSION['userComments'][$i]['CommentID']);
+                  if ($_SESSION['commentRatings'][$j]['Rating'] === 1) {
+                    $likes += $_SESSION['commentRatings'][$j]['Rating'];
+                  } else if ($_SESSION['commentRatings'][$j]['Rating'] === -1) {
+                    $dislikes += $_SESSION['commentRatings'][$j]['Rating'];
+                    $dislikes = abs($dislikes);
+                  }
+                }
+              }
+              echo "<div class=\"w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme\"><br>";
+              echo "<div class=\"w3-container #cae4f3 w3-theme-d2 w3-round\" style=\"height: auto;\">";
+              echo "<span class=\"w3-right\">" . $commentTime . "<br></span>";
+              echo "<img src=\"../images/profile4.png\" alt=\"Avatar\" class=\"w3-left w3-circle w3-margin-right\" style=\"width:55px\">";
+              echo "<h4>" . ($_SESSION['userComments'][$i]['FName']) . " " . ($_SESSION['userComments'][$i]['MI']) . " " . ($_SESSION['userComments'][$i]['LName']) . "</h4>";
+              echo "</div>";
+              echo "<!--Top of comments to change different background color-Keben-->";
+              echo "<hr class=\"w3-clear\">";
+              echo "<p>" . ($_SESSION['userComments'][$i]['Message']) . "<br></p>";
+              echo "<hr class=\"w3-clear\">";
+              echo "<div class=\"w3-row-padding\" style=\"margin:0 -16px\"></div>";
+              echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</button>";
+              echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</button>";
+              //echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-comment\" style=\"font-size:28px;color:white\"></i>  Comment</button>";
+              echo "</div>";
+            }
+          }
+        }
+        ?>
+        <!-- End Middle Column -->
       </div>
 
-      <!--Comment Page-->
-      <div class="w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme"><br>
-        <!--Time still needs to be fixed, so when a post is added it tells what time is was posted-->
-        <div class="w3-container #cae4f3 w3-theme-d2 w3-round" style="height: auto;">
-          <span class="w3-right">1 min ago</span>
-          <img src="../images/profile4.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:55px">
-          <h4>John Doe</h4>
-        </div>
-        <!--Top of comments to change different background color-Keben-->
-        <hr class="w3-clear">
-        <p>Comments would go here.</p>
-        <hr class="w3-clear">
-        <div class="w3-row-padding" style="margin:0 -16px"></div>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-up" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-down" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-comment" style="font-size:28px;color:white"></i>  Comment</button>
-      </div>
-
-      <!--Comment Page-->
-      <div class="w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme"><br>
-        <!--Time still needs to be fixed, so when a post is added it tells what time is was posted-->
-        <div class="w3-container #cae4f3 w3-theme-d2 w3-round" style="height: auto;">
-          <span class="w3-right">16 mins ago</span>
-          <img src="../images/profile4.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:55px">
-          <h4>Jane Doe</h4>
-        </div>
-        <!--Top of comments to change different background color-Keben-->
-        <hr class="w3-clear">
-        <p>Comments would go here.</p>
-        <hr class="w3-clear">
-        <div class="w3-row-padding" style="margin:0 -16px"></div>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-up" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-down" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-comment" style="font-size:28px;color:white"></i>  Comment</button>
-      </div>
-
-      <!--Comment Page-->
-      <div class="w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme"><br>
-        <!--Time still needs to be fixed, so when a post is added it tells what time is was posted-->
-        <div class="w3-container #cae4f3 w3-theme-d2 w3-round" style="height: auto;">
-          <span class="w3-right">32 mins ago</span>
-          <img src="../images/profile4.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:55px">
-          <h4>Angie Jane</h4>
-        </div>
-        <!--Top of comments to change different background color-Keben-->
-        <hr class="w3-clear">
-        <p>Comments would go here.</p>
-        <hr class="w3-clear">
-        <div class="w3-row-padding" style="margin:0 -16px"></div>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-up" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-down" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-comment" style="font-size:28px;color:white"></i>  Comment</button>
-      </div>
-      <!-- End Middle Column -->
+      <!-- End Grid -->
     </div>
 
-    <!-- End Grid -->
-  </div>
-
-  <!-- End Page Container -->
+    <!-- End Page Container -->
   </div>
   <br>
 

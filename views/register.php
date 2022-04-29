@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-print_r($_SESSION);
 
 if ($_SESSION) {
     if ($_SESSION['loggedProfile'])
@@ -109,8 +108,16 @@ if ($_SESSION) {
 
     <div class="container">
         <div class="row">
-            <div style="color: red; font-weight: bold;"><?php if(isset($_SESSION["reg_error"])) { print($_SESSION["reg_error"]); unset($_SESSION["reg_error"]); } ?></div>
-            <div style="color: green; font-weight: bold;"><?php if(isset($_SESSION["success"])) { print($_SESSION["success"]); unset($_SESSION["success"]); } ?></div>
+        <?php 
+        if (isset($_SESSION["reg_error"])) { 
+            echo "<div class=\"warning\"><i class=\"fa fa-warning\"></i> ".$_SESSION["reg_error"]." </div>";
+            unset($_SESSION["error"]); 
+        }
+        if (isset($_SESSION["success"])) { 
+            echo "<div class=\"success\"><i class=\"fa fa-check\"></i> ".$_SESSION["success"]." </div>";
+            unset($_SESSION["success"]); 
+        }
+        ?>
             <h2 style="text-align:center">Welcome to Rate 'Em</h2>
             <h3 style="text-align:center">Register as...</h3>
             <div class="vl">
@@ -150,7 +157,12 @@ if ($_SESSION) {
                 <label>
                     <h4><b>Welcome!</b></h4>
                 </label>
-                <div style="color: red; font-weight: bold;"><?php if(isset($_SESSION["lreg_error"])) { print($_SESSION["lreg_error"]); unset($_SESSION["lreg_error"]); } ?></div>
+                <?php 
+                if (isset($_SESSION["lreg_error"])) { 
+                    echo "<div class=\"warning\"><i class=\"fa fa-warning\"></i> ".$_SESSION["lreg_error"]." </div>";
+                    unset($_SESSION["error"]); 
+                }
+                ?>
             </div>
     
             <form class="w3-container" action="../config/landlordReg.php" method="post">
@@ -192,7 +204,7 @@ if ($_SESSION) {
                     <input class="w3-input w3-border w3-margin-bottom" type="number" min="0" placeholder="Enter the number of bedrooms the property has" 
                         value="<?php print($_SESSION["Rms"]); unset($_SESSION["Rms"]); ?>" name="numOfBedrooms" required>
                     <label><b>*Price</b></label>
-                    <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter the price that the property is listed at" 
+                    <input class="w3-input w3-border w3-margin-bottom" type="number" min="0.00" step="0.01" placeholder="Enter the price that the property is listed at" 
                         value="<?php print($_SESSION["Cost"]); unset($_SESSION["Cost"]); ?>" name="price" required>
                     <label><b>*Property Type</b></label>
                     <input class="w3-input w3-border w3-margin-bottom" type="text" list="types" placeholder="Select the property type..."
@@ -226,7 +238,12 @@ if ($_SESSION) {
                 <label>
                     <h4><b>Welcome!</b></h4>
                 </label>
-                <div style="color: red; font-weight: bold;"><?php if(isset($_SESSION["treg_error"])) { print($_SESSION["treg_error"]); unset($_SESSION["treg_error"]); } ?></div>
+                <?php 
+                if (isset($_SESSION["treg_error"])) { 
+                    echo "<div class=\"warning\"><i class=\"fa fa-warning\"></i> ".$_SESSION["treg_error"]." </div>";
+                    unset($_SESSION["error"]); 
+                }
+                ?>
             </div>
     
             <form class="w3-container" action="../config/tenantReg.php" method="post">

@@ -13,8 +13,10 @@ if (!($_SESSION)) {
 ?>
 <html>
 <!-- 04/08/2022 - Leny: Copy of myProfile.php, which is for logged in users, this file will be for profiles that have been searched -->
-<!-- TO DO: Get profile information for a searched user -->
 <!-- 04/16/2022 - Keben: Fixed Account Info -->
+<!-- CH got ratings to print and allow logged in users to rate other users -->
+<!-- 04/08/2022 - Leny: Displayed more info and added some validation for leaving ratings/comments, a logged in user cannot look themselves up and give rating/comment -->
+<!-- TO DO: ALLOW USERS TO RATE USERS -->
 
 <head>
   <title>Search Result</title>
@@ -34,6 +36,22 @@ if (!($_SESSION)) {
         "logout": true
       };
       $.post("../config/accLogin.php", args)
+        .done(function(result, status, xhr) {
+          if (status == "success") {
+            console.log(result);
+          } else {
+            console.error(result);
+          }
+        })
+        .fail(function(xhr, status, error) {
+          console.error(error);
+        });
+    }
+    function profileReviews() {
+      args = {
+        "giveRating": true
+      };
+      $.post("../config/leaveReviews.php", args)
         .done(function(result, status, xhr) {
           if (status == "success") {
             console.log(result);
@@ -218,7 +236,6 @@ if (!($_SESSION)) {
             </h4>
             <p class="w3-center"><img src="../images/profile4.png" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
             <hr>
-
             <p><i class="fa fa-envelope fa-fw w3-margin-right"></i><?php print($_SESSION['usersResults'][$_SESSION['selectProfile']]['Email']) ?></p>
             <?php
             if ($_SESSION) {
@@ -228,24 +245,59 @@ if (!($_SESSION)) {
                 echo "<p><i class=\"fa fa-home fa-fw w3-margin-right\"></i>Tenant</p>";
               }
             } else {
-              header("Location: ../views/login.php");
+              header("Location: ../views/home.php");
             }
             ?>
 
-            <!-- Direct to a more detailed rating of the acocunt -->
-            <a href="../views/detailedReview.html">Overall Rating</a>
-            <p><i> <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-              </i></p>
+            <!--CH created Direct to a more detailed rating of the acocunt -->
+            <a href="../views/detailedReview.php">Overall Rating</a>
+            <?php 
+              //display users overall rating/5
+              if($_SESSION) {
+                  if($_SESSION['resultUserRating']['TotalRating']) {
+                    $ratings = $_SESSION['resultUserRating']['TotalRating'];
+                    $ratings = round($ratings, 1);
+                    echo ": ", $ratings, "/5", "<br>";
+                  } else {
+                    echo ": No ratings yet..<br>";
+                  }
+              } else {
+                echo "<br><br>";
+              }
+              //web user can drop down menu and rate others.
+              if($_SESSION) {
+                if($_SESSION['loggedProfile']) {
+                  if($_SESSION['loggedProfile']['Email'] !== $_SESSION['usersResults'][$_SESSION['selectProfile']]['Email']){
+                    echo "Give a Rating (1-5):";
+                    echo "<form method=\"post\" action=\"../config/leaveReviews.php\" name=\"giveRating\">
+                    <input type=\"number\" name=\"stars\" min=\"1\" max=\"5\" maxlength=\"1\"></form>";
+                  } else {
+                    echo "<br><br>";
+                  }
+                 } else {
+                  echo "Login or register to rate!";
+                  echo "<br><br>";
+                }
+              } else {
+                echo "<br><br>";
+              }
+            ?>
+
+            <!--  
+                  <div class="dropdown">
+                    <button class="dropbtn">Rate Me</button>
+                    <div class="dropdown-content">
+                      <a href="#">1</a>
+                      <a href="#">2</a>
+                      <a href="#">3</a>
+                      <a href="#">4</a>
+                      <a href="#">5</a>
+                    </div>
+                  </div> 
+            -->
           </div>
         </div>
-        <br>
-
-        <br>
-
+        <br><br>
         <!-- Related Searches -->
         <div class="w3-card w3-round #2f94ca w3-theme w3-hide-small">
           <div class="w3-container">
@@ -301,75 +353,96 @@ if (!($_SESSION)) {
             <div class="w3-card w3-round w3-theme">
               <?php
               if ($_SESSION) {
-                echo "<div class=\"w3-container w3-padding\">
-            <h6>Want to leave a comment?</h6>
-            <p contentEditable=true class=\"w3-border w3-padding w3-white\"></p>
-            <button type=\"button\" class=\"w3-button\"><i class=\"fa fa-pencil\"></i>  Post</button> ";
-              } else {
-                echo "<div class=\"w3-container w3-padding\">
-            <h6>Sign in or register to leave comments!</h6>
-            <p contentEditable=false class=\"w3-border w3-padding w3-white\"></p>
-            <button type=\"button\" class=\"w3-button\"><i class=\"fa fa-pencil\"></i>  Post</button>";
+                if ($_SESSION['loggedProfile']) {
+                    if($_SESSION['loggedProfile']['Email'] !== $_SESSION['usersResults'][$_SESSION['selectProfile']]['Email']) {
+                      echo "<div class=\"w3-container w3-padding\"><h6>Want to leave a comment?</h6>
+                      <p contentEditable=true class=\"w3-border w3-padding w3-white\"></p>
+                      <button type=\"button\" class=\"w3-button\"><i class=\"fa fa-pencil\"></i>  Post</button></div>";
+                    }
+                } else {
+                  echo "<div class=\"w3-container w3-padding\"><h6>Sign in or register to leave comments!</h6>
+                  <p contentEditable=false class=\"w3-border w3-padding w3-white\"></p>
+                  <button type=\"button\" class=\"w3-button\"><i class=\"fa fa-pencil\"></i>  Post</button></div>";
+                }
               }
               ?>
-            </div>
           </div>
         </div>
       </div>
 
       <!--Comment Page-->
-      <div class="w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme"><br>
-        <!--Time still needs to be fixed, so when a post is added it tells what time is was posted-->
-        <div class="w3-container #cae4f3 w3-theme-d2 w3-round" style="height: auto;">
-          <span class="w3-right">1 min ago</span>
-          <img src="../images/profile4.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:55px">
-          <h4>John Doe</h4>
-        </div>
-        <!--Top of comments to change different background color-Keben-->
-        <hr class="w3-clear">
-        <p>Comments would go here.</p>
-        <hr class="w3-clear">
-        <div class="w3-row-padding" style="margin:0 -16px"></div>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-up" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-down" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-comment" style="font-size:28px;color:white"></i>  Comment</button>
-      </div>
+      <?php
+        function elapsed_time($date, $full = false)
+        {
+          $now = new DateTime();
+          $ago = new DateTime($date);
+          $diff = $now->diff($ago);
 
-      <!--Comment Page-->
-      <div class="w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme"><br>
-        <!--Time still needs to be fixed, so when a post is added it tells what time is was posted-->
-        <div class="w3-container #cae4f3 w3-theme-d2 w3-round" style="height: auto;">
-          <span class="w3-right">16 mins ago</span>
-          <img src="../images/profile4.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:55px">
-          <h4>Jane Doe</h4>
-        </div>
-        <!--Top of comments to change different background color-Keben-->
-        <hr class="w3-clear">
-        <p>Comments would go here.</p>
-        <hr class="w3-clear">
-        <div class="w3-row-padding" style="margin:0 -16px"></div>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-up" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-down" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-comment" style="font-size:28px;color:white"></i>  Comment</button>
-      </div>
+          $diff->w = floor($diff->d / 7);
+          $diff->d -= $diff->w * 7;
 
-      <!--Comment Page-->
-      <div class="w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme"><br>
-        <!--Time still needs to be fixed, so when a post is added it tells what time is was posted-->
-        <div class="w3-container #cae4f3 w3-theme-d2 w3-round" style="height: auto;">
-          <span class="w3-right">32 mins ago</span>
-          <img src="../images/profile4.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:55px">
-          <h4>Angie Jane</h4>
-        </div>
-        <!--Top of comments to change different background color-Keben-->
-        <hr class="w3-clear">
-        <p>Comments would go here.</p>
-        <hr class="w3-clear">
-        <div class="w3-row-padding" style="margin:0 -16px"></div>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-up" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-thumbs-down" style="font-size:28px;color:white"></i> </button>
-        <button type="button" class="w3-button w3-margin-bottom"><i class="fa fa-comment" style="font-size:28px;color:white"></i>  Comment</button>
-      </div>
+          $string = array(
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+          );
+          foreach ($string as $time => &$newtime) {
+            if ($diff->$time) {
+              $newtime = $diff->$time . ' ' . $newtime . ($diff->$time > 1 ? 's' : '');
+            } else {
+              unset($string[$time]);
+            }
+          }
+
+          if (!$full) $string = array_slice($string, 0, 1);
+          return $string ? implode(', ', $string) . ' ago' : 'just now';
+        }
+
+        if ($_SESSION) {
+          if ($_SESSION['resultUserCom.']) {
+            $likes = 0;
+            $dislikes = 0;
+            $cRating = $_SESSION['resultComRates'];
+            $numcRatings = count($cRating);
+            $comments = $_SESSION['resultUserCom.'];
+            $numComments = count($comments);
+            for ($i = 0; $i < $numComments; $i++) {
+              $date = $_SESSION['resultUserCom.'][$i]['Date'];
+              $commentTime = elapsed_time($date);
+              for ($j = 0; $j < $numcRatings; $j++) {
+                if (($_SESSION['resultUserCom.'][$i]['CommentID']) === ($_SESSION['resultComRates'][$j]['CommentID'])) {
+                  $_SESSION['SharedCommentID'] = ($_SESSION['resultUserCom.'][$i]['CommentID']);
+                  if ($_SESSION['resultComRates'][$j]['Rating'] === 1) {
+                    $likes += $_SESSION['resultComRates'][$j]['Rating'];
+                  } else if ($_SESSION['resultComRates'][$j]['Rating'] === -1) {
+                    $dislikes += $_SESSION['resultComRates'][$j]['Rating'];
+                    $dislikes = abs($dislikes);
+                  }
+                }
+              }
+              echo "<div class=\"w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme\"><br>";
+              echo "<div class=\"w3-container #cae4f3 w3-theme-d2 w3-round\" style=\"height: auto;\">";
+              echo "<span class=\"w3-right\">" . $commentTime . "<br></span>";
+              echo "<img src=\"../images/profile4.png\" alt=\"Avatar\" class=\"w3-left w3-circle w3-margin-right\" style=\"width:55px\">";
+              echo "<h4>" . ($_SESSION['resultUserCom.'][$i]['FName']) . " " . ($_SESSION['resultUserCom.'][$i]['MI']) . " " . ($_SESSION['resultUserCom.'][$i]['LName']) . "</h4>";
+              echo "</div>";
+              echo "<!--Top of comments to change different background color-Keben-->";
+              echo "<hr class=\"w3-clear\">";
+              echo "<p>" . ($_SESSION['resultUserCom.'][$i]['Message']) . "<br></p>";
+              echo "<hr class=\"w3-clear\">";
+              echo "<div class=\"w3-row-padding\" style=\"margin:0 -16px\"></div>";
+              echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</button>";
+              echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</button>";
+              //echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-comment\" style=\"font-size:28px;color:white\"></i>  Comment</button>";
+              echo "</div>";
+            }
+          }
+        }
+        ?>
       <!-- End Middle Column -->
     </div>
 

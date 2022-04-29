@@ -3,6 +3,7 @@
 // 04/04/2022 Keben: Login Sessions and Logout Work and got logout working
 // 04/08/2022 Leny: Also get a logged in account's information (including landlord's properties)
 // 04/24/2022 Leny: Got user ratings and their comments
+// 04/27/2022 Keben: Fixed comment query
 
 session_start();
 print_r($_SESSION);
@@ -29,7 +30,7 @@ if (isset($_POST['login'])) {
             header("Location: ../views/login.php");
         } else {
             // Get comments
-            $Comments = $db->prepare("SELECT * FROM Comment Where ForEmail =?");
+            $Comments = $db->prepare("SELECT * FROM User NATURAL JOIN Comment Where Comment.ForEmail =? AND User.Email=Comment.UEmail");
             $Comments->bind_param('s', $Email);
             $Comments->execute();
             $GetComments = $Comments->get_result();
@@ -162,7 +163,6 @@ if (isset($_POST['login'])) {
 if (isset($_POST['logout'])) {
     unset($_POST['logout']);
     session_start();
-    echo 'Logout Successfully';
     session_destroy();
     header("Location: ../views/login.php");
 }

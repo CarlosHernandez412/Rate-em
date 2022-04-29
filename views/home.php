@@ -38,7 +38,7 @@ function logout() {
   }
   function search() {
   args = { "zipcode": true };
-  $.post("../config/searhBar.php", args)
+  $.post("../config/searchBar.php", args)
     .done(function (result, status, xhr) {
       if (status == "success") { console.log(result); }
       else { console.error(result); }

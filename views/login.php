@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-print_r($_SESSION);
 
 if ($_SESSION) {
   if ($_SESSION['loggedProfile'])
@@ -81,8 +80,16 @@ if ($_SESSION) {
     <div class="w3-container w3-modal-content w3-border-top w3-card-4 form w3-padding-32" style="max-width:600px; background-color: #FFFFFF;">
       <div class="w3-center"><br>
         <h3><b>Welcome back!</b></h3>
-        <div style="color: red; font-weight: bold;"><?php if(isset($_SESSION["error"])) { print($_SESSION["error"]); unset($_SESSION["error"]); } ?></div>
-        <div style="color: green; font-weight: bold;"><?php if(isset($_SESSION["success"])) { print($_SESSION["success"]); unset($_SESSION["success"]); } ?></div>
+        <?php 
+        if (isset($_SESSION["error"])) { 
+          echo "<div class=\"warning\"><i class=\"fa fa-warning\"></i> ".$_SESSION["error"]." </div>";
+          unset($_SESSION["error"]); 
+        }
+        if (isset($_SESSION["success"])) { 
+          echo "<div class=\"success\"><i class=\"fa fa-check\"></i> ".$_SESSION["success"]." </div>";
+          unset($_SESSION["success"]); 
+        }
+      ?>
       </div>
       
       <form class="w3-container" action="../config/accLogin.php" method="post">

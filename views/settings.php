@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-print_r($_SESSION);
 
 if (!($_SESSION))
     header("Location: ../views/login.php");
@@ -173,14 +172,16 @@ else {
             <div class="w3-center">
                 <h6><i><b>Password required</b> to update any account information.</i></h6>
                 <h6><i>That includes deleting the account!</i></h6>
-                <div style="color: red; font-weight: bold;"><?php if (isset($_SESSION["error"])) {
-                                                                print($_SESSION["error"]);
-                                                                unset($_SESSION["error"]);
-                                                            } ?></div>
-                <div style="color: green; font-weight: bold;"><?php if (isset($_SESSION["success"])) {
-                                                                    print($_SESSION["success"]);
-                                                                    unset($_SESSION["success"]);
-                                                                } ?></div>
+                <?php 
+                if (isset($_SESSION["error"])) { 
+                    echo "<div class=\"warning\"><i class=\"fa fa-warning\"></i> ".$_SESSION["error"]." </div>";
+                    unset($_SESSION["error"]); 
+                }
+                if (isset($_SESSION["success"])) { 
+                    echo "<div class=\"success\"><i class=\"fa fa-check\"></i> ".$_SESSION["success"]." </div>";
+                    unset($_SESSION["success"]); 
+                }
+                ?>
                 <h4><b>Account Settings:</b></h4>
             </div>
             <label>
