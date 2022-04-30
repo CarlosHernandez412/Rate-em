@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-print_r($_SESSION);
 
 ?>
 <html>
@@ -32,8 +31,8 @@ print_r($_SESSION);
           console.error(error);
         });
     }
-    function search() {
-  args = { "user": true };
+    function searchUser() {
+  args = { "userSearchAgain": true };
   $.post("../config/searhBar.php", args)
     .done(function (result, status, xhr) {
       if (status == "success") { console.log(result); }
@@ -150,11 +149,11 @@ print_r($_SESSION);
   <div style="position: relative; left: 0px; top: 55px; max-width: 200px">
     <section class="w3-container" aria-label="filters" style="z-index: 1;">
       <form class="search-form" role="search" method="post" id="search-form" action="../config/searchBar.php">
-        <input required type="text" autocomplete="off" placeholder="Enter Desired User.." name="UserType" value="" style="position: fixed; left: 0px; top:52px">
+        <input required type="text" autocomplete="off" placeholder="Enter Desired User.." name="userSearchAgain" value="" style="position: fixed; left: 0px; top:52px">
       </form>
   </div>
-  <!--  -->
-  <!-- User Selection -->
+
+  <!-- User Type Selection -->
   <!--div class="dropdown" style="position: fixed; left: 229px; top: 60px"> <--!-- action and method "post" -->
     <!--button class="dropbtn" onclick="myFunction('UserType')">UserType</button>
     <div id="myDropdown" class="dropdown-content">
@@ -164,9 +163,7 @@ print_r($_SESSION);
       <button class="btn" id="btn-search" type="submit" name="filter">Done</button>-->
       <!-- End of price selection 
     </div>
-  </div>-->
-  </section>
-
+  </div>
   <script>
     function toggle(source) {
       checkboxes = document.getElementsByName('homeType');
@@ -174,7 +171,10 @@ print_r($_SESSION);
         checkboxes[i].checked = source.checked;
       }
     }
-  </script>
+  </script>-->
+  </section>
+
+
   <!-- Section for results -->
   <?php
   if ($_SESSION) {

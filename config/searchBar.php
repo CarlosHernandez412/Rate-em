@@ -82,6 +82,16 @@ if (isset($_POST["search"])) {
             $Rating = $getRating->get_result();
             $accRating = $Rating->fetch_assoc();
 
+            if($_SESSION['loggedProfile']) {
+                $myRates = $db->prepare("SELECT * FROM UserRates WHERE UEmail = ?");
+                $myRates->bind_param('s', $_SESSION['loggedProfile']['Email']);
+                $myRates->execute();
+                $Rating = $myRates->get_result();
+                $myRating = $Rating->fetch_assoc();
+
+                $_SESSION['loggedProfileRated'] = $myRating;
+            }
+
             $_SESSION['resultUserCom.'] = $comments;
             $_SESSION['resultComRates'] = $cRatings;
             $_SESSION['resultUserRating'] = $accRating;
@@ -150,6 +160,16 @@ if (isset($_POST["search"])) {
             $getRating->execute();
             $Rating = $getRating->get_result();
             $accRating = $Rating->fetch_assoc();
+
+            if($_SESSION['loggedProfile']) {
+                $myRates = $db->prepare("SELECT * FROM UserRates WHERE UEmail = ?");
+                $myRates->bind_param('s', $_SESSION['loggedProfile']['Email']);
+                $myRates->execute();
+                $Rating = $myRates->get_result();
+                $myRating = $Rating->fetch_assoc();
+
+                $_SESSION['loggedProfileRated'] = $myRating;
+            }
 
             $accType = $db->prepare("SELECT Landlord.Email FROM Landlord Where Email =?");
             $accType->bind_param('s', $result[0]["Email"]);
@@ -282,6 +302,16 @@ if (isset($_POST["zipcodeAgain"]) && !empty($_POST["zipcodeAgain"]) && is_numeri
                 $Rating = $getRating->get_result();
                 $accRating = $Rating->fetch_assoc();
 
+                if($_SESSION['loggedProfile']) {
+                    $myRates = $db->prepare("SELECT * FROM UserRates WHERE UEmail = ?");
+                    $myRates->bind_param('s', $_SESSION['loggedProfile']['Email']);
+                    $myRates->execute();
+                    $Rating = $myRates->get_result();
+                    $myRating = $Rating->fetch_assoc();
+    
+                    $_SESSION['loggedProfileRated'] = $myRating;
+                }
+
                 $_SESSION['resultUserCom.'] = $comments;
                 $_SESSION['resultComRates'] = $cRatings;
                 $_SESSION['resultUserRating'] = $accRating;
@@ -362,6 +392,16 @@ if (isset($_POST["zipcodeAgain"]) && !empty($_POST["zipcodeAgain"]) && is_numeri
             $Rating = $getRating->get_result();
             $accRating = $Rating->fetch_assoc();
 
+            if($_SESSION['loggedProfile']) {
+                $myRates = $db->prepare("SELECT * FROM UserRates WHERE UEmail = ?");
+                $myRates->bind_param('s', $_SESSION['loggedProfile']['Email']);
+                $myRates->execute();
+                $Rating = $myRates->get_result();
+                $myRating = $Rating->fetch_assoc();
+
+                $_SESSION['loggedProfileRated'] = $myRating;
+            }
+
             $_SESSION['resultUserCom.'] = $comments;
             $_SESSION['resultComRates'] = $cRatings;
             $_SESSION['resultUserRating'] = $accRating;
@@ -380,3 +420,125 @@ if (isset($_POST["zipcodeAgain"]) && !empty($_POST["zipcodeAgain"]) && is_numeri
         }
     }
 }
+
+if (isset($_POST["userSearchAgain"]) && !empty($_POST["userSearchAgain"]) && !(is_numeric($_POST["userSearchAgain"]))) {
+    $db = getConnected();
+    $userAgain = $_POST["userSearchAgain"];
+    $query = $db->prepare("SELECT * FROM User Where FName =?");
+    $query->bind_param('s', $userAgain);
+    $query->execute();
+    $Account = $query->get_result();
+
+    $result = [];
+    while ($row = $Account->fetch_assoc()) {
+        $result[] = $row;
+    }
+    if ($result) {
+        // Get comments
+        $Comments = $db->prepare("SELECT * FROM User NATURAL JOIN Comment Where Comment.ForEmail =? AND User.Email=Comment.UEmail");
+        $Comments->bind_param('s', $result[0]['Email']);
+        $Comments->execute();
+        $GetComments = $Comments->get_result();
+        $comments = [];
+        while ($row = $GetComments->fetch_assoc()) {
+            $comments[] = $row;
+        }
+        // Get likes/dislikes for each comment that has a rating
+        $totalComments = count($comments);
+        for ($i = 0; $i < $totalComments; $i++) {
+            $commentIDs[] = $comments[$i]['CommentID'];
+        }
+        $cRatings = [];
+        foreach ($commentIDs as $commentID) {
+            $commentRatings = $db->prepare("SELECT * FROM CommentRates Where CommentID =?");
+            $commentRatings->bind_param('i', $commentID);
+            $commentRatings->execute();
+            $commentRtes = $commentRatings->get_result();
+            while ($row = $commentRtes->fetch_assoc()) {
+                $cRatings[] = $row;
+            }
+        }
+        // Get account rating
+        $getRating = $db->prepare(
+            "SELECT ForEmail, TotalRating 
+                    FROM User INNER JOIN
+                    (
+                        SELECT AVG(Stars) AS TotalRating, ForEmail
+                        FROM UserRates NATURAL JOIN User 
+                        GROUP BY ForEmail
+                        ) AS Ratings
+                        ON Ratings.ForEmail = User.Email
+                        WHERE User.Email = ?"
+        );
+        $getRating->bind_param('s', $result[0]['Email']);
+        $getRating->execute();
+        $Rating = $getRating->get_result();
+        $accRating = $Rating->fetch_assoc();
+
+        if($_SESSION['loggedProfile']) {
+            $myRates = $db->prepare("SELECT * FROM UserRates WHERE UEmail = ?");
+            $myRates->bind_param('s', $_SESSION['loggedProfile']['Email']);
+            $myRates->execute();
+            $Rating = $myRates->get_result();
+            $myRating = $Rating->fetch_assoc();
+
+            $_SESSION['loggedProfileRated'] = $myRating;
+        }
+        
+        $accType = $db->prepare("SELECT Landlord.Email FROM Landlord Where Email =?");
+        $accType->bind_param('s', $result[0]["Email"]);
+        $accType->execute();
+        $landlordAcc = 0;
+
+        while ($accType->fetch()) {
+            $landlordAcc++;
+        }
+        if ($landlordAcc == 0) {
+            $query = $db->prepare("SELECT DISTINCT Property.*, PropertyType.Type, Occupies.Stars FROM Property 
+            NATURAL JOIN PropertyType NATURAL JOIN Occupies NATURAL JOIN Tenant NATURAL JOIN User 
+            Where Occupies.TEmail = Tenant.Email AND User.FName =?");
+            $query->bind_param('s', $UserSearch);
+            $query->execute();
+            $prevRentals = $query->get_result();
+
+            $resultsPrevRentals = [];
+            while ($row = $prevRentals->fetch_assoc()) {
+                $resultsPrevRentals[] = $row;
+            }
+            $_SESSION['resultUserCom.'] = $comments;
+            $_SESSION['resultComRates'] = $cRatings;
+            $_SESSION['resultUserRating'] = $accRating;
+            $_SESSION["usersResults"] = $result;
+            $_SESSION["resultsPrevRentals"] = $resultsPrevRentals;
+            $_SESSION['resultType'] = "Tenant";
+            header("Location: ../views/userSearch.php");
+        } else if ($landlordAcc > 0) {
+            $query = $db->prepare("SELECT * FROM Property NATURAL JOIN PropertyType Where LEmail =?");
+            $query->bind_param('s', $result[0]["Email"]);
+            $query->execute();
+            $properties = $query->get_result();
+
+            $propertyList = [];
+            while ($row = $properties->fetch_assoc()) {
+                $propertyList[] = $row;
+            }
+            $_SESSION['resultUserCom.'] = $comments;
+            $_SESSION['resultComRates'] = $cRatings;
+            $_SESSION['resultUserRating'] = $accRating;
+            $_SESSION["usersResults"] = $result;
+            $_SESSION["resultsProperties"] = $propertyList;
+            $_SESSION['resultType'] = "Landlord";
+            header("Location: ../views/userSearch.php");
+        }
+    } else {
+        $_SESSION['resultUserCom.'] = NULL;
+        $_SESSION['resultComRates'] = NULL;
+        $_SESSION['resultUserRating'] = NULL;
+        $_SESSION["usersResults"] = NULL;
+        $_SESSION["resultsProperties"] = NULL;
+        $_SESSION['resultType'] = NULL;
+        header("Location: ../views/userSearch.php");
+    }
+}
+
+?>

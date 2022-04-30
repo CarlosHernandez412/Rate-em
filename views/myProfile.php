@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-print_r($_SESSION);
 
 if (!($_SESSION))
   header("Location: ../views/login.php");
@@ -15,6 +14,7 @@ else {
 <!-- 4-4-22 - Keben Added logout button-->
 <!-- 4-25-2022 Laura: Real time for user comments to display how long ago a post was posted -->
 <!-- 4-27-2022 Keben: Got comments displaying-->
+<!-- 4-29-2022 Keben & Elena: Got likes and dislikes displaying correctly -->
 <!-- CH added ratings being displayed on page from db -->
 
 <head>
@@ -151,6 +151,18 @@ else {
     .w3-hover-border-theme:hover {
       border-color: #236c93 !important
     }
+    .disabledBtnLD {
+      border:none;
+      display:inline-block;
+      padding:8px 16px;
+      vertical-align:middle;
+      overflow:hidden;
+      text-decoration:none;
+      color:inherit;
+      background-color:inherit;
+      text-align:center;
+      white-space:nowrap
+    }
   </style>
 </head>
 
@@ -229,7 +241,7 @@ else {
                 $ratings = round($ratings, 1);
                 echo ": ", $ratings, "/5", "<br><br>";
               } else {
-                echo ": No ratings yet..<br>";
+                echo ": No ratings yet..<br><br>";
               }
             } else {
               echo "<br><br>";
@@ -324,45 +336,37 @@ else {
           return $string ? implode(', ', $string) . ' ago' : 'just now';
         }
 
-        if ($_SESSION) {
-          if ($_SESSION['userComments']) {
-            $likes = 0;
-            $dislikes = 0;
-            $cRating = $_SESSION['commentRatings'];
-            $numcRatings = count($cRating);
-            $comments = $_SESSION['userComments'];
-            $numComments = count($comments);
-            for ($i = 0; $i < $numComments; $i++) {
-              $date = $_SESSION['userComments'][$i]['Date'];
-              $commentTime = elapsed_time($date);
-              for ($j = 0; $j < $numcRatings; $j++) {
-                if (($_SESSION['userComments'][$i]['CommentID']) === ($_SESSION['commentRatings'][$j]['CommentID'])) {
-                  $_SESSION['SharedCommentID'] = ($_SESSION['userComments'][$i]['CommentID']);
-                  if ($_SESSION['commentRatings'][$j]['Rating'] === 1) {
-                    $likes += $_SESSION['commentRatings'][$j]['Rating'];
-                  } else if ($_SESSION['commentRatings'][$j]['Rating'] === -1) {
-                    $dislikes += $_SESSION['commentRatings'][$j]['Rating'];
-                    $dislikes = abs($dislikes);
-                  }
-                }
+        $comments = $_SESSION['userComments'];
+        $cRating = $_SESSION['commentRatings'];
+        foreach($comments as $cindex => $comments) {
+          $likes = 0;
+          $dislikes = 0;
+          $commentTime = elapsed_time($comments['Date']);
+          foreach ($cRating as $rindex => $rating) {
+            if ($rating["CommentID"] === $comments["CommentID"]) {
+              if ($rating["Rating"] === 1) {
+                $likes++;
               }
-              echo "<div class=\"w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme\"><br>";
-              echo "<div class=\"w3-container #cae4f3 w3-theme-d2 w3-round\" style=\"height: auto;\">";
-              echo "<span class=\"w3-right\">" . $commentTime . "<br></span>";
-              echo "<img src=\"../images/profile4.png\" alt=\"Avatar\" class=\"w3-left w3-circle w3-margin-right\" style=\"width:55px\">";
-              echo "<h4>" . ($_SESSION['userComments'][$i]['FName']) . " " . ($_SESSION['userComments'][$i]['MI']) . " " . ($_SESSION['userComments'][$i]['LName']) . "</h4>";
-              echo "</div>";
-              echo "<!--Top of comments to change different background color-Keben-->";
-              echo "<hr class=\"w3-clear\">";
-              echo "<p>" . ($_SESSION['userComments'][$i]['Message']) . "<br></p>";
-              echo "<hr class=\"w3-clear\">";
-              echo "<div class=\"w3-row-padding\" style=\"margin:0 -16px\"></div>";
-              echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</button>";
-              echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</button>";
-              //echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-comment\" style=\"font-size:28px;color:white\"></i>  Comment</button>";
-              echo "</div>";
+              else {
+                $dislikes++;
+              }
             }
           }
+            echo "<div class=\"w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme\"><br>";
+            echo "<div class=\"w3-container #cae4f3 w3-theme-d2 w3-round\" style=\"height: auto;\">";
+            echo "<span class=\"w3-right\">" . $commentTime . "<br></span>";
+            echo "<img src=\"../images/profile4.png\" alt=\"Avatar\" class=\"w3-left w3-circle w3-margin-right\" style=\"width:55px\">";
+            echo "<h4>" . $comments["FName"] . " " . $comments["MI"] . " " . $comments["LName"] . "</h4>";
+            echo "</div>";
+            echo "<!--Top of comments to change different background color-Keben-->";
+            echo "<hr class=\"w3-clear\">";
+            echo "<p>" . $comments["Message"] . "<br></p>";
+            echo "<hr class=\"w3-clear\">";
+            echo "<div class=\"w3-row-padding\" style=\"margin:0 -16px\"></div>";
+            echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</div>";
+            echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</div>";
+            //echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-comment\" style=\"font-size:28px;color:white\"></i>  Comment</button>";
+            echo "</div>";
         }
         ?>
         <!-- End Middle Column -->

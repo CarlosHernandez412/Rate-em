@@ -3,7 +3,6 @@
 // 4-28-22 Leny: Tenants can now give ratings to previous rented properties
 
 session_start();
-print_r($_SESSION);
 require_once "../config/.config.php";
 
 // Update rating

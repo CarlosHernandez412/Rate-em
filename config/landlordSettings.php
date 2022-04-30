@@ -4,7 +4,6 @@
 // 4-28-22 Leny: Allow landlords to delete or update property and renter rows 
 // TO DO: Test
 session_start();
-print_r($_SESSION);
 require_once "../config/.config.php";
 
 //Add a new tenant

@@ -1,7 +1,6 @@
 <?php
 // 4-23-22 Leny: Allow users to update their passwords
 session_start();
-print_r($_SESSION);
 require_once "../config/.config.php";
 
 if (isset($_POST['changePass'])) {

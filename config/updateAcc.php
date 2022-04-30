@@ -3,7 +3,6 @@
 // 4-21-22 Keben, Leny: Worked on account updates and tested
 // 4-25-22 Keben, Leny: Worked on deleting an account and tested
 session_start();
-print_r($_SESSION);
 require_once "../config/.config.php";
 
 //Update Settings

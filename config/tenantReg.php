@@ -4,7 +4,6 @@
 // 3-18-22 Leny: Registration works with validation
 
 session_start();
-print_r($_SESSION);
 require_once "../config/.config.php";
 
 // Landlord user registeration with validation

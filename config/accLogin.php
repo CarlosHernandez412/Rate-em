@@ -6,7 +6,6 @@
 // 04/27/2022 Keben: Fixed comment query
 
 session_start();
-print_r($_SESSION);
 require_once "../config/.config.php";
 
 // User login

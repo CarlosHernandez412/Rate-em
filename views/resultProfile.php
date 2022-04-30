@@ -1,11 +1,10 @@
 <?php
 
 session_start();
-print_r($_SESSION);
 
 if (!($_SESSION)) {
   header("Location: ../views/propertySearch.php");
-} else if($_SESSION){
+} else if ($_SESSION) {
   if (!($_SESSION['usersResults']))
     header("Location: ../views/propertySearch.php");
 }
@@ -16,7 +15,8 @@ if (!($_SESSION)) {
 <!-- 04/16/2022 - Keben: Fixed Account Info -->
 <!-- CH got ratings to print and allow logged in users to rate other users -->
 <!-- 04/08/2022 - Leny: Displayed more info and added some validation for leaving ratings/comments, a logged in user cannot look themselves up and give rating/comment -->
-<!-- TO DO: ALLOW USERS TO RATE USERS -->
+<!-- 04/29/2022 - Leny: Users can now leave comments and ratings -->
+<!-- 04/29/2022 - Leny: Users can now like/dislike comments even undo those dislikes or likes -->
 
 <head>
   <title>Search Result</title>
@@ -47,9 +47,15 @@ if (!($_SESSION)) {
           console.error(error);
         });
     }
+
     function profileReviews() {
       args = {
-        "giveRating": true
+        "stars": true,
+        "leaveComment": true,
+        "dislike": true,
+        "like": true,
+        "undo-dislike": true,
+        "undo-like": true
       };
       $.post("../config/leaveReviews.php", args)
         .done(function(result, status, xhr) {
@@ -168,6 +174,19 @@ if (!($_SESSION)) {
     .w3-hover-border-theme:hover {
       border-color: #236c93 !important
     }
+
+    .disabledBtnLD {
+      border: none;
+      display: inline-block;
+      padding: 8px 16px;
+      vertical-align: middle;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      background-color: inherit;
+      text-align: center;
+      white-space: nowrap
+    }
   </style>
 </head>
 
@@ -207,18 +226,30 @@ if (!($_SESSION)) {
           <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
           <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>";
           }
-         } else {
-            echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
+        } else {
+          echo "<a href=\"../views/home.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Home</a>
           <a href=\"../views/register.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Register</a>
           <a href=\"../views/login.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Login</a>
           <a href=\"../views/aboutus.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">About Us</a>
           <a href=\"../views/contact.php\" class=\"w3-bar-item w3-button w3-hide-small w3-hover-white\">Contact</a>";
-          }
+        }
         ?>
       </div>
     </div>
   </div>
 
+  <?php
+  if (isset($_SESSION["error"])) {
+    echo "<div style=\"padding-top: 100px;\">";
+    echo "<div class=\"warning\"><i class=\"fa fa-warning\"></i> " . $_SESSION["error"] . "</div></div>";
+    unset($_SESSION["error"]);
+  }
+  if (isset($_SESSION["success"])) {
+    echo "<div style=\"padding-top: 100px;\">";
+    echo "<div class=\"success\"><i class=\"fa fa-check\"></i> " . $_SESSION["success"] . "</div></div>";
+    unset($_SESSION["success"]);
+  }
+  ?>
 
   <!-- Page Container: My Profile and Related searches and Comments -->
   <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
@@ -231,7 +262,7 @@ if (!($_SESSION)) {
           <div class="w3-container">
             <h4 id="accountName" class="w3-center">
               <?php
-              print_r($_SESSION['usersResults'][$_SESSION['selectProfile']]['FName']).print_r(" ").print_r($_SESSION['usersResults'][$_SESSION['selectProfile']]['MI']).print_r(" ").print_r($_SESSION['usersResults'][$_SESSION['selectProfile']]['LName']);
+              print_r($_SESSION['usersResults'][$_SESSION['selectProfile']]['FName']) . print_r(" ") . print_r($_SESSION['usersResults'][$_SESSION['selectProfile']]['MI']) . print_r(" ") . print_r($_SESSION['usersResults'][$_SESSION['selectProfile']]['LName']);
               ?>
             </h4>
             <p class="w3-center"><img src="../images/profile4.png" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
@@ -251,36 +282,43 @@ if (!($_SESSION)) {
 
             <!--CH created Direct to a more detailed rating of the acocunt -->
             <a href="../views/detailedReview.php">Overall Rating</a>
-            <?php 
-              //display users overall rating/5
-              if($_SESSION) {
-                  if($_SESSION['resultUserRating']['TotalRating']) {
-                    $ratings = $_SESSION['resultUserRating']['TotalRating'];
-                    $ratings = round($ratings, 1);
-                    echo ": ", $ratings, "/5", "<br>";
-                  } else {
-                    echo ": No ratings yet..<br>";
-                  }
+            <?php
+            //display users overall rating/5
+            if ($_SESSION) {
+              if ($_SESSION['resultUserRating']['TotalRating']) {
+                $ratings = $_SESSION['resultUserRating']['TotalRating'];
+                $ratings = round($ratings, 1);
+                echo ": ", $ratings, "/5", "<br>";
               } else {
-                echo "<br><br>";
+                echo ": No ratings yet..<br>";
               }
-              //web user can drop down menu and rate others.
-              if($_SESSION) {
-                if($_SESSION['loggedProfile']) {
-                  if($_SESSION['loggedProfile']['Email'] !== $_SESSION['usersResults'][$_SESSION['selectProfile']]['Email']){
+            } else {
+              echo "<br><br>";
+            }
+
+            //web user can drop down menu and rate others.
+            if ($_SESSION) {
+              if ($_SESSION['loggedProfile']) {
+                if ($_SESSION['loggedProfile']['Email'] !== $_SESSION['usersResults'][$_SESSION['selectProfile']]['Email']) {
+                  if ($_SESSION['loggedProfile']['Email'] === $_SESSION['loggedProfileRated']['UEmail']) {
+                    echo "Previously rated, update here:";
+                    echo "<form method=\"post\" action=\"../config/leaveReviews.php\" name=\"giveRating\">
+                      <input type=\"number\" value=" . $_SESSION['loggedProfileRated']['Stars'] . " name=\"stars\" min=\"1\" max=\"5\" maxlength=\"1\"></form>";
+                  } else {
                     echo "Give a Rating (1-5):";
                     echo "<form method=\"post\" action=\"../config/leaveReviews.php\" name=\"giveRating\">
-                    <input type=\"number\" name=\"stars\" min=\"1\" max=\"5\" maxlength=\"1\"></form>";
-                  } else {
-                    echo "<br><br>";
+                      <input type=\"number\" name=\"stars\" min=\"1\" max=\"5\" maxlength=\"1\"></form>";
                   }
-                 } else {
-                  echo "Login or register to rate!";
+                } else {
                   echo "<br><br>";
                 }
               } else {
+                echo "Login or register to rate!";
                 echo "<br><br>";
               }
+            } else {
+              echo "<br><br>";
+            }
             ?>
 
             <!--  
@@ -309,7 +347,7 @@ if (!($_SESSION)) {
                 $properties = $_SESSION['resultsProperties'];
                 $numProperties = count($properties);
                 for ($i = 0; $i < $numProperties; $i++) {
-                  echo "<div style=\"font-size: 17px;\"><b>Property ".($i+1).":</b></div>";
+                  echo "<div style=\"font-size: 17px;\"><b>Property " . ($i + 1) . ":</b></div>";
                   echo "Type: " . ($_SESSION['resultsProperties'][$i]['Type']) . "<br>";
                   echo "State: " . ($_SESSION['resultsProperties'][$i]['State']) . "<br>";
                   echo "City: " . ($_SESSION['resultsProperties'][$i]['City']) . "<br>";
@@ -328,7 +366,7 @@ if (!($_SESSION)) {
                   echo "<div style=\"font-size: 17px;\"><b>Property " . ($i + 1) . ":</b></div>";
                   echo "Property Owner: " . ($_SESSION['resultsPrevRentals'][$i]['LEmail']) . "<br>";
                   echo "Property Type: " . ($_SESSION['resultsPrevRentals'][$i]['Type']) . "<br>";
-                  echo "Property Location: ".($_SESSION['resultsPrevRentals'][$i]['City']).", ".($_SESSION['resultsPrevRentals'][$i]['State'])."<br>";
+                  echo "Property Location: " . ($_SESSION['resultsPrevRentals'][$i]['City']) . ", " . ($_SESSION['resultsPrevRentals'][$i]['State']) . "<br>";
                   echo "Number of rooms: " . ($_SESSION['resultsPrevRentals'][$i]['NumOfRooms']) . "<br>";
                   echo "Number of bathrooms: " . ($_SESSION['resultsPrevRentals'][$i]['NumOfBathrooms']) . "<br>";
                   echo "Property Price: " . ($_SESSION['resultsPrevRentals'][$i]['Price']) . "<br>";
@@ -354,24 +392,24 @@ if (!($_SESSION)) {
               <?php
               if ($_SESSION) {
                 if ($_SESSION['loggedProfile']) {
-                    if($_SESSION['loggedProfile']['Email'] !== $_SESSION['usersResults'][$_SESSION['selectProfile']]['Email']) {
-                      echo "<div class=\"w3-container w3-padding\"><h6>Want to leave a comment?</h6>
-                      <p contentEditable=true class=\"w3-border w3-padding w3-white\"></p>
-                      <button type=\"button\" class=\"w3-button\"><i class=\"fa fa-pencil\"></i>  Post</button></div>";
-                    }
+                  if ($_SESSION['loggedProfile']['Email'] !== $_SESSION['usersResults'][$_SESSION['selectProfile']]['Email']) {
+                    echo "<div class=\"w3-container w3-padding\"><h6>Want to leave a comment?</h6>
+                      <p><form method=\"post\" action=\"../config/leaveReviews.php\" name=\"commentRate\">
+                      <input maxlength=\"500\" type=\"text\" class=\"w3-border w3-white\" name=\"message\" style=\"width: 100%\"></p>
+                      <button name=\"leaveComment\" type=\"submit\" class=\"w3-button\"><i class=\"fa fa-pencil\"></i>  Post</button></form></div>";
+                  }
                 } else {
                   echo "<div class=\"w3-container w3-padding\"><h6>Sign in or register to leave comments!</h6>
-                  <p contentEditable=false class=\"w3-border w3-padding w3-white\"></p>
-                  <button type=\"button\" class=\"w3-button\"><i class=\"fa fa-pencil\"></i>  Post</button></div>";
+                  <p contentEditable=false class=\"w3-border w3-padding w3-white\"></p></div>";
                 }
               }
               ?>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!--Comment Page-->
-      <?php
+        <!--Comment Page-->
+        <?php
         function elapsed_time($date, $full = false)
         {
           $now = new DateTime();
@@ -401,55 +439,90 @@ if (!($_SESSION)) {
           if (!$full) $string = array_slice($string, 0, 1);
           return $string ? implode(', ', $string) . ' ago' : 'just now';
         }
-
-        if ($_SESSION) {
-          if ($_SESSION['resultUserCom.']) {
-            $likes = 0;
-            $dislikes = 0;
-            $cRating = $_SESSION['resultComRates'];
-            $numcRatings = count($cRating);
-            $comments = $_SESSION['resultUserCom.'];
-            $numComments = count($comments);
-            for ($i = 0; $i < $numComments; $i++) {
-              $date = $_SESSION['resultUserCom.'][$i]['Date'];
-              $commentTime = elapsed_time($date);
-              for ($j = 0; $j < $numcRatings; $j++) {
-                if (($_SESSION['resultUserCom.'][$i]['CommentID']) === ($_SESSION['resultComRates'][$j]['CommentID'])) {
-                  $_SESSION['SharedCommentID'] = ($_SESSION['resultUserCom.'][$i]['CommentID']);
-                  if ($_SESSION['resultComRates'][$j]['Rating'] === 1) {
-                    $likes += $_SESSION['resultComRates'][$j]['Rating'];
-                  } else if ($_SESSION['resultComRates'][$j]['Rating'] === -1) {
-                    $dislikes += $_SESSION['resultComRates'][$j]['Rating'];
-                    $dislikes = abs($dislikes);
-                  }
-                }
+        $comments = $_SESSION['resultUserCom.'];
+        $cRating = $_SESSION['resultComRates'];
+        foreach ($comments as $cindex => $comments) {
+          $likes = 0;
+          $dislikes = 0;
+          $commentTime = elapsed_time($comments['Date']);
+          foreach ($cRating as $rindex => $rating) {
+            if ($rating["CommentID"] === $comments["CommentID"]) {
+              if ($rating["Rating"] === 1) {
+                $likes++;
+              } else {
+                $dislikes++;
               }
-              echo "<div class=\"w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme\"><br>";
-              echo "<div class=\"w3-container #cae4f3 w3-theme-d2 w3-round\" style=\"height: auto;\">";
-              echo "<span class=\"w3-right\">" . $commentTime . "<br></span>";
-              echo "<img src=\"../images/profile4.png\" alt=\"Avatar\" class=\"w3-left w3-circle w3-margin-right\" style=\"width:55px\">";
-              echo "<h4>" . ($_SESSION['resultUserCom.'][$i]['FName']) . " " . ($_SESSION['resultUserCom.'][$i]['MI']) . " " . ($_SESSION['resultUserCom.'][$i]['LName']) . "</h4>";
-              echo "</div>";
-              echo "<!--Top of comments to change different background color-Keben-->";
-              echo "<hr class=\"w3-clear\">";
-              echo "<p>" . ($_SESSION['resultUserCom.'][$i]['Message']) . "<br></p>";
-              echo "<hr class=\"w3-clear\">";
-              echo "<div class=\"w3-row-padding\" style=\"margin:0 -16px\"></div>";
-              echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</button>";
-              echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</button>";
-              //echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-comment\" style=\"font-size:28px;color:white\"></i>  Comment</button>";
-              echo "</div>";
             }
           }
+          echo "<div class=\"w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme\"><br>";
+          echo "<div class=\"w3-container #cae4f3 w3-theme-d2 w3-round\" style=\"height: auto;\">";
+          echo "<span class=\"w3-right\">" . $commentTime . "<br></span>";
+          echo "<img src=\"../images/profile4.png\" alt=\"Avatar\" class=\"w3-left w3-circle w3-margin-right\" style=\"width:55px\">";
+          echo "<h4>" . $comments["FName"] . " " . $comments["MI"] . " " . $comments["LName"] . "</h4>";
+          echo "</div>";
+          echo "<!--Top of comments to change different background color-Keben-->";
+          echo "<hr class=\"w3-clear\">";
+          echo "<p>" . $comments["Message"] . "<br></p>";
+          echo "<hr class=\"w3-clear\">";
+          echo "<div class=\"w3-row-padding\" style=\"margin:0 -16px\"></div>";
+          if ($_SESSION['loggedProfile']) {
+            if ($_SESSION['resultComRates']) { 
+              if ($_SESSION['loggedProfile']['Email'] !== ($_SESSION['usersResults'][$_SESSION['selectProfile']]['Email'])) {
+                foreach ($cRating as $rindex => $rating) {
+                  goto checkAgain;
+                }
+                checkAgain: {
+                  if (($_SESSION['loggedProfile']['Email'] === $rating["UEmail"]) && ($rating["CommentID"] === $comments["CommentID"])) {
+                    if ($rating["Rating"] === 1) {
+                      echo "<form method=\"post\" action=\"../config/leaveReviews.php\">
+                      <input type=\"hidden\" name=\"commentID\" value=" . $comments["CommentID"] . ">
+                      <button name=\"undo-like\" type=\"submit\" class=\"w3-button w3-margin-bottom\">
+                      <i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:green\"></i>" . $likes . "</button>";
+                      echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</div></form>";
+                    } else {
+                      echo "<form method=\"post\" action=\"../config/leaveReviews.php\">
+                      <input type=\"hidden\" name=\"commentID\" value=" . $comments["CommentID"] . ">
+                      <div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</div>";
+                      echo "<button name=\"undo-dislike\" type=\"submit\" class=\"w3-button w3-margin-bottom\">
+                      <i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:red\"></i>" . $dislikes . "</button></form>";
+                    }
+                  } else {
+                    echo "<form method=\"post\" action=\"../config/leaveReviews.php\">
+                    <input type=\"hidden\" name=\"commentID\" value=" . $comments["CommentID"] . ">
+                    <button  name=\"like\" type=\"submit\" class=\"w3-button w3-margin-bottom\">
+                    <i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</button>";
+                    echo "<button name=\"dislike\" type=\"submit\" class=\"w3-button w3-margin-bottom\">
+                    <i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</button></form>";
+                  }
+                }
+              } else {
+                echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</div>";
+                echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</div>";
+              }
+            } else {
+               echo "<form method=\"post\" action=\"../config/leaveReviews.php\">
+              <input type=\"hidden\" name=\"commentID\" value=" . $comments["CommentID"] . ">
+              <button  name=\"like\" type=\"submit\" class=\"w3-button w3-margin-bottom\">
+              <i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</button>";
+              echo "<button name=\"dislike\" type=\"submit\" class=\"w3-button w3-margin-bottom\">
+              <i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</button></form>";
+              
+            }
+          } else {
+            echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</div>";
+            echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</div>";
+          }
+          //echo "<button type=\"button\" class=\"w3-button w3-margin-bottom\"><i class=\"fa fa-comment\" style=\"font-size:28px;color:white\"></i>  Comment</button>";
+          echo "</div>";
         }
         ?>
-      <!-- End Middle Column -->
+        <!-- End Middle Column -->
+      </div>
+
+      <!-- End Grid -->
     </div>
 
-    <!-- End Grid -->
-  </div>
-
-  <!-- End Page Container -->
+    <!-- End Page Container -->
   </div>
   <br>
 
