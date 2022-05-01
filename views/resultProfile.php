@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+print_r($_SESSION);
 
 if (!($_SESSION)) {
   header("Location: ../views/propertySearch.php");
@@ -187,10 +188,18 @@ if (!($_SESSION)) {
       text-align: center;
       white-space: nowrap
     }
+    #footer {
+      background-color: #E5F2FF; color: black; left: 0; bottom: 0; width: 100%; position: absolute;
+    }
+    #profileContent {
+      position: sticky;        
+      min-height: 100%;
+      padding-bottom: 6rem;
+    }
   </style>
 </head>
 
-<body class="w3-theme-l3 #1f6286 w3-theme-dark">
+<body id="profileContent" class="w3-theme-l3 #1f6286 w3-theme-dark">
 
   <!-- Navbar -->
   <div class="w3-top">
@@ -290,7 +299,7 @@ if (!($_SESSION)) {
                 $ratings = round($ratings, 1);
                 echo ": ", $ratings, "/5", "<br>";
               } else {
-                echo ": No ratings yet..<br>";
+                echo ": No ratings<br>";
               }
             } else {
               echo "<br><br>";
@@ -300,14 +309,20 @@ if (!($_SESSION)) {
             if ($_SESSION) {
               if ($_SESSION['loggedProfile']) {
                 if ($_SESSION['loggedProfile']['Email'] !== $_SESSION['usersResults'][$_SESSION['selectProfile']]['Email']) {
-                  if ($_SESSION['loggedProfile']['Email'] === $_SESSION['loggedProfileRated']['UEmail']) {
-                    echo "Previously rated, update here:";
-                    echo "<form method=\"post\" action=\"../config/leaveReviews.php\" name=\"giveRating\">
-                      <input type=\"number\" value=" . $_SESSION['loggedProfileRated']['Stars'] . " name=\"stars\" min=\"1\" max=\"5\" maxlength=\"1\"></form>";
+                  if ($_SESSION['Type'] !== $_SESSION['resultType']) {
+                    if (($_SESSION['loggedProfile']['Email'] === $_SESSION['loggedProfileRated']['UEmail']) &&
+                      ($_SESSION['usersResults'][$_SESSION['selectProfile']]['Email'] === $_SESSION['loggedProfileRated']['ForEmail'])
+                    ) {
+                      echo "Previously rated, update here:";
+                      echo "<form method=\"post\" action=\"../config/leaveReviews.php\" name=\"giveRating\">
+                        <input type=\"number\" value=" . $_SESSION['loggedProfileRated']['Stars'] . " name=\"stars\" min=\"1\" max=\"5\" maxlength=\"1\"></form>";
+                    } else {
+                      echo "Give a Rating (1-5):";
+                      echo "<form method=\"post\" action=\"../config/leaveReviews.php\" name=\"giveRating\">
+                        <input type=\"number\" name=\"stars\" min=\"1\" max=\"5\" maxlength=\"1\"></form>";
+                    }
                   } else {
-                    echo "Give a Rating (1-5):";
-                    echo "<form method=\"post\" action=\"../config/leaveReviews.php\" name=\"giveRating\">
-                      <input type=\"number\" name=\"stars\" min=\"1\" max=\"5\" maxlength=\"1\"></form>";
+                    echo "Cannot rate the same user type.<br><br>";
                   }
                 } else {
                   echo "<br><br>";
@@ -466,8 +481,8 @@ if (!($_SESSION)) {
           echo "<hr class=\"w3-clear\">";
           echo "<div class=\"w3-row-padding\" style=\"margin:0 -16px\"></div>";
           if ($_SESSION['loggedProfile']) {
-            if ($_SESSION['resultComRates']) { 
-              if ($_SESSION['loggedProfile']['Email'] !== ($_SESSION['usersResults'][$_SESSION['selectProfile']]['Email'])) {
+            if ($_SESSION['loggedProfile']['Email'] !== ($_SESSION['usersResults'][$_SESSION['selectProfile']]['Email'])) {
+              if ($_SESSION['resultComRates']) {
                 foreach ($cRating as $rindex => $rating) {
                   goto checkAgain;
                 }
@@ -496,17 +511,16 @@ if (!($_SESSION)) {
                   }
                 }
               } else {
-                echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</div>";
-                echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</div>";
+                echo "<form method=\"post\" action=\"../config/leaveReviews.php\">
+                 <input type=\"hidden\" name=\"commentID\" value=" . $comments["CommentID"] . ">
+                 <button  name=\"like\" type=\"submit\" class=\"w3-button w3-margin-bottom\">
+                 <i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</button>";
+                echo "<button name=\"dislike\" type=\"submit\" class=\"w3-button w3-margin-bottom\">
+                 <i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</button></form>";
               }
             } else {
-               echo "<form method=\"post\" action=\"../config/leaveReviews.php\">
-              <input type=\"hidden\" name=\"commentID\" value=" . $comments["CommentID"] . ">
-              <button  name=\"like\" type=\"submit\" class=\"w3-button w3-margin-bottom\">
-              <i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</button>";
-              echo "<button name=\"dislike\" type=\"submit\" class=\"w3-button w3-margin-bottom\">
-              <i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</button></form>";
-              
+              echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</div>";
+              echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-down\" style=\"font-size:28px;color:white\"></i>" . $dislikes . "</div>";
             }
           } else {
             echo "<div class=\"disabledBtnLD w3-margin-bottom\"><i class=\"fa fa-thumbs-up\" style=\"font-size:28px;color:white\"></i>" . $likes . "</div>";
@@ -525,15 +539,6 @@ if (!($_SESSION)) {
     <!-- End Page Container -->
   </div>
   <br>
-
-  <!--Footer-->
-  <footer id="myFooter">
-    <div class="w3-container" style="background-color: #E5F2FF; color: black;">
-      <!-- w3-theme-l1"> -->
-      <h4>Rate 'Em</h4>
-      <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-    </div>
-  </footer>
 
   <script>
     // Accordion
@@ -561,5 +566,13 @@ if (!($_SESSION)) {
   </script>
 
 </body>
+  <!--Footer-->
+  <footer id="footer">
+    <div class="w3-container">
+      <!-- w3-theme-l1"> -->
+      <h4>Rate 'Em</h4>
+      <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+    </div>
+  </footer>
 
 </html>

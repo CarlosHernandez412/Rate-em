@@ -178,7 +178,7 @@ else {
                     $numRentals = count($Rentals);
                     for ($i = 0; $i < $numRentals; $i++) {
                         echo "<tr id= $i>";
-                        echo "<td><input class=\"w3-input w3-border w3-center w3-margin-bottom\" type=\"number\" min=\"0\" name=\"propertyID\" 
+                        echo "<td><input class=\"w3-input w3-border w3-center w3-margin-bottom\" type=\"number\" min=\"0\" 
                             readonly value =" . ($_SESSION['allRentals'][$i]['PropertyID']) . "></td>";
                         echo "<td><input class=\"w3-input w3-border w3-center w3-margin-bottom\"
                             readonly value =" . ($_SESSION['allRentals'][$i]['LEmail']) . "></td>";
@@ -220,6 +220,8 @@ else {
             }
 
             selectedRow = event.srcElement.offsetParent.offsetParent.children[0].children[selectedRowNum+1];
+            var propertyID = event.path[2].children[0].children[0].defaultValue;
+            console.log(propertyID);
             var startDate = event.path[2].children[3].children[0].defaultValue;
             var endDate = event.path[2].children[4].children[0].defaultValue;
 
@@ -235,10 +237,12 @@ else {
                 } else {
                     event.srcElement.type = 'submit';
                     event.srcElement.name = 'giveRating';
+                    event.path[2].children[0].children[0].name = 'propertyID';
+                    event.path[2].children[0].children[0].value = propertyID;
                     event.path[2].children[3].children[0].name = 'startDate';
                     event.path[2].children[3].children[0].value = startDate;
                     event.path[2].children[4].children[0].name = 'endDate';
-                    event.path[2].children[4].children[0].value = endDate;
+                    event.path[2].children[4].children[0].value = endDate; 
                 }
             }
         }

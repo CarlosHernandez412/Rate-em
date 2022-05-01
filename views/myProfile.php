@@ -163,10 +163,18 @@ else {
       text-align:center;
       white-space:nowrap
     }
+    #footer {
+      background-color: #E5F2FF; color: black; left: 0; bottom: 0; width: 100%; position: absolute;
+    }
+    #profileContent {
+      position: sticky;        
+      min-height: 100%;
+      padding-bottom: 6rem;
+    }
   </style>
 </head>
 
-<body class="w3-theme-l3 #1f6286 w3-theme-dark">
+<body id="profileContent" class="w3-theme-l3 #1f6286 w3-theme-dark">
 
   <!-- Navbar -->
   <div class="w3-top">
@@ -379,15 +387,6 @@ else {
   </div>
   <br>
 
-  <!--Footer-->
-  <footer id="myFooter">
-    <div class="w3-container" style="background-color: #E5F2FF; color: black;">
-      <!-- w3-theme-l1"> -->
-      <h4>Rate 'Em</h4>
-      <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-    </div>
-  </footer>
-
   <script>
     // Accordion
     function myFunction(id) {
@@ -414,5 +413,12 @@ else {
   </script>
 
 </body>
-
+  <!--Footer-->
+<footer id="footer">
+    <div class="w3-container">
+      <!-- w3-theme-l1"> -->
+      <h4>Rate 'Em</h4>
+      <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+    </div>
+</footer>
 </html>

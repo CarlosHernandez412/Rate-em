@@ -2,7 +2,7 @@
 // 4-22-22 Leny: Allow landlords to list any new renters
 // 4-25-22 Leny: Allow landlords to add new properties
 // 4-28-22 Leny: Allow landlords to delete or update property and renter rows 
-// TO DO: Test
+// 4-30-22 Leny, Keben: Tested Lanaldord Settings
 session_start();
 require_once "../config/.config.php";
 
@@ -178,12 +178,14 @@ if (isset($_POST['updateTenant'])) {
     if ($pass) {
         if (empty($EndDate))
             $EndDate = NULL;
+        if (empty($Stars))
+            $Stars = NULL;
         if (strlen($PropertyID) == 0 || strlen($TenantEmail) == 0 || strlen($StartDate) == 0) {
             $_SESSION["error"] = "Please fill out all fields to update tenant row!";
             header("Location: ../views/property.php");
         } else {
-            $update = $db->prepare("UPDATE Occupies SET TEmail =?, Start =?, End =? WHERE PropertyID =? AND Stars =?");
-            $update->bind_param('sssii', $TenantEmail, $StartDate, $EndDate, $PropertyID, $Stars);
+            $update = $db->prepare("CALL updateOccupies(?, ?, ?, ?, ?)");
+            $update->bind_param('sissi', $TenantEmail, $PropertyID, $StartDate, $EndDate, $Stars);
             if ($update->execute()) {
                 // Get new updated rows information under the session
                 $updatedRenter = $db->prepare("SELECT Occupies.* FROM Property NATURAL JOIN Occupies WHERE Property.LEmail =?");
@@ -198,12 +200,12 @@ if (isset($_POST['updateTenant'])) {
                     $_SESSION['success'] = 'Renter information successfully updated!';
                     header("Location: ../views/property.php");
                 } else {
-                    echo "Error executing query: " . mysqli_error($db);
-                    die();
+                    $_SESSION["error"] = mysqli_error($db);
+                    header("Location: ../views/property.php");
                 }
             } else {
-                echo "Error executing query: " . mysqli_error($db);
-                die();
+                $_SESSION["error"] = mysqli_error($db);
+                header("Location: ../views/property.php");
             }
         }
     } else {
@@ -240,7 +242,7 @@ if (isset($_POST['updateProperty'])) {
             } else {
                 $propertyTypes = ['Apartment', 'House', 'Mobile Home', 'Trailer Home', 'Condo', 'Studio'];
                 if (in_array($Type, $propertyTypes)) {
-                    $update = $db->prepare("CALL updateProperty( LEmail, PropertyID, NumOfRooms, NumOfBathrooms, Price, State, City, Zipcode, Type )");
+                    $update = $db->prepare("CALL updateProperty( ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                     $update->bind_param('siiidssis', $Email, $PropertyID, $NumOfBedrooms, $NumOfBathrooms, $Price, $State, $City, $Zipcode, $Type);
                     if ($update->execute()) {
                         // Get new updated rows information under the session
@@ -291,7 +293,11 @@ if (isset($_POST['deleteTenant'])) {
     //Verify password
     $pass = password_verify($Password, $AccountPW);
     if ($pass) {
-        $delete = $db->prepare("DELETE FROM Occupies WHERE TEmail =? AND PropertyID =? AND Start =? AND End =? AND Stars =?");
+        if (empty($EndDate))
+            $EndDate = NULL;
+        if (empty($Stars))
+            $Stars = NULL;
+        $delete = $db->prepare("CALL deleteTenant(?, ?, ?, ?, ?)");
         $delete->bind_param('sissi', $TenantEmail, $PropertyID, $StartDate, $EndDate, $Stars);
         if ($delete->execute()) {
             // Get rows after deleted row under session
@@ -344,6 +350,7 @@ if (isset($_POST['deleteProperty'])) {
             $result = $db->query("SELECT @outCome as outcome");
             $outcome = $result->fetch_assoc();
             $deleteSuccess = $outcome['outcome'];
+            $deleteSuccess = intval($deleteSuccess);
             if ($deleteSuccess > 1) {
                 // Get rows after deleted row under session
                 $query = $db->prepare("SELECT * FROM Property NATURAL JOIN PropertyType Where LEmail =?");
@@ -356,7 +363,7 @@ if (isset($_POST['deleteProperty'])) {
                         $propertyList[] = $row;
                     }
                     $_SESSION['myProperties'] = $propertyList;
-                    $_SESSION['success'] = 'Property successfully deleted!';
+                    $_SESSION['success'] = 'Property successfully updated!';
                     header("Location: ../views/property.php");
                 } else {
                     echo "Error executing query: " . mysqli_error($db);

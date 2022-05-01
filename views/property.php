@@ -272,7 +272,7 @@ else {
                             readonly value =\"Waiting for rating..!\"></td>";
                         } else {
                             echo "<td><input class=\"w3-input w3-border w3-center w3-margin-bottom\" type=\"number\" min=\"0\" 
-                            readonly value =" . ($_SESSION['myRenters'][$i]['Stars']) . "></td>";
+                            readonly value =" . ($_SESSION['myRenters'][$i]['Stars']) . " name=\"Stars\"></td>";
                         }
                         echo "<th contentEditable=false style=\"width: 7%;\"><button id=\"change\" onclick=\"updateTenant(event, " . ($_SESSION['myRenters'][$i]['PropertyID']) . ")\"
                     class=\"w3-round-xlarge\" style=\"background-color: lightblue;\" type=\"button\">Edit</button>
