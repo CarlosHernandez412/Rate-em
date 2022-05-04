@@ -243,7 +243,7 @@ if (isset($_POST['updateProperty'])) {
                 $propertyTypes = ['Apartment', 'House', 'Mobile Home', 'Trailer Home', 'Condo', 'Studio'];
                 if (in_array($Type, $propertyTypes)) {
                     $update = $db->prepare("CALL updateProperty( ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                    $update->bind_param('siiidssis', $Email, $PropertyID, $NumOfBedrooms, $NumOfBathrooms, $Price, $State, $City, $Zipcode, $Type);
+                    $update->bind_param('siiidssis', $Email, $PropertyID, $NumOfBathrooms, $NumOfBedrooms, $Price, $State, $City, $Zipcode, $Type);
                     if ($update->execute()) {
                         // Get new updated rows information under the session
                         $query = $db->prepare("SELECT * FROM Property NATURAL JOIN PropertyType Where LEmail =?");

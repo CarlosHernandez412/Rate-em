@@ -101,7 +101,7 @@ if (isset($_POST['delete'])) {
                 die();
             }
         } elseif ($Type === 'Tenant') {
-            $delete = $db->prepare("CALL deleteTenant(?)");
+            $delete = $db->prepare("CALL deleteTenantAcc(?)");
             $delete->bind_param('s', $Email);
             if ($delete->execute()) {
                 session_destroy();

@@ -27,6 +27,18 @@ function logout() {
     console.error(error);
   });
 }
+
+function email() {
+  args = { "submit": true };
+  $.post("../config/contact.php", args)
+  .done(function (result, status, xhr) {
+    if (status == "success") { console.log(result); }
+    else { console.error(result); }
+  })
+  .fail(function (xhr, status, error) {
+    console.error(error);
+  });
+}
 </script>
   
   <style>
@@ -67,7 +79,6 @@ function logout() {
   </style>
 </head>
 
-<body style="background-color: #f2f2f2">
 <!-- Navbar -->
 <div class="w3-top">
   <div class="w3-bar w3-theme-d2 w3-left-align w3-large text-color:black">
@@ -113,25 +124,35 @@ function logout() {
     </div>
   </div>
 </div>
-  <!-- Need to fix the contact form label not popping up(HEIGHT OR LOCATION ISSUE) -->
+<body style="background-color: #f2f2f2; padding-top: 5%;">
   <h3>Contact Form</h3>
+  <?php 
+        if (isset($_SESSION["error"])) { 
+          echo "<div class=\"warning\"><i class=\"fa fa-warning\"></i> ".$_SESSION["error"]." </div>";
+          unset($_SESSION["error"]); 
+        }
+        if (isset($_SESSION["success"])) { 
+          echo "<div class=\"success\"><i class=\"fa fa-check\"></i> ".$_SESSION["success"]." </div>";
+          unset($_SESSION["success"]); 
+        }
+  ?>
   <!-- Need to make a php file for contact inquiries -->
   <div class="container">
-    <form action="/contactredirect.php">
-      <label for="fname">First Name</label>
-      <input type="text" id="fname" name="firstname" placeholder="John">
-
-      <label for="lname">Last Name</label>
-      <input type="text" id="lname" name="lastname" placeholder="Smith">
-
-      <label for="name">Email</label>
-      <input type="text" id="email" name="name" placeholder="email@email.com">
+    <form method= "post" action="../config/contact.php">
+      <label for="name"><i class="fa fa-envelope"></i> Email</label>
+      <input type="text" id="email" name="email" placeholder="email@email.com">
+      
+      <label for="name"><i class="fa fa-user"></i> Name</label>
+      <input type="text" id="name" name="name" placeholder="John Smith">
 
       <label for="subject">Subject</label>
-      <textarea id="subject" name="subject" placeholder="Hello I am contacting you about.."
+      <input type="text" id="subject" name="subject" placeholder="Suggestion">
+
+      <label for="message">Message</label>
+      <textarea id="message" name="message" placeholder="Hello I am contacting you about.."
         style="height:200px"></textarea>
 
-      <input type="submit" value="Submit">
+      <input type="submit" name="submit" value="Submit">
     </form>
   </div>
 

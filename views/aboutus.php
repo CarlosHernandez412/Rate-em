@@ -178,7 +178,7 @@ session_start();
   <div class="row" style="position: relative; left: 310px;">
     <div class="column">
       <div class="w3-center card">
-        <a href="https://github.com/leny673?tab=repositories">
+        <a href="https://github.com/leny673">
           <img class="profilepic" src="../images/leny.jpg" alt="Leny">
         </a>
         <div class="container">
