@@ -169,7 +169,7 @@ color: orange;
         <!--Time still needs to be fixed, so when a post is added it tells what time is was posted-->
         <div class="w3-container #cae4f3 w3-theme-d2 w3-round" style="height: auto;">
         <span class="w3-right" >16 mins ago</span>
-        <img src="../images/profile4.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:55px"><h4>Jane Doe</h4></div>
+        <img src="../images/profileIcon.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:55px"><h4>Jane Doe</h4></div>
         <!--Top of comments to change different background color-Keben-->
         <hr class="w3-clear">
         <p>Comments would go here.</p>

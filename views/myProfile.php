@@ -222,7 +222,7 @@ else {
           <div class="w3-container">
             <h4 id="accountName" class="w3-center"><?php print_r($_SESSION['loggedProfile']['FName']) . print_r(" ") . print_r($_SESSION['loggedProfile']['MI'])
                                                       . print_r(" ") . print_r($_SESSION['loggedProfile']['LName']) ?></h4>
-            <p class="w3-center"><img src="../images/profile4.png" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
+            <p class="w3-center"><img src="../images/profileIcon.png" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
             <hr>
 
             <p><i class="fa fa-envelope fa-fw w3-margin-right"></i><?php print($_SESSION['loggedProfile']['Email']) ?></p>
@@ -363,7 +363,7 @@ else {
             echo "<div class=\"w3-container w3-card-4 w3-round w3-margin #1f6286 w3-theme\"><br>";
             echo "<div class=\"w3-container #cae4f3 w3-theme-d2 w3-round\" style=\"height: auto;\">";
             echo "<span class=\"w3-right\">" . $commentTime . "<br></span>";
-            echo "<img src=\"../images/profile4.png\" alt=\"Avatar\" class=\"w3-left w3-circle w3-margin-right\" style=\"width:55px\">";
+            echo "<img src=\"../images/profileIcon.png\" alt=\"Avatar\" class=\"w3-left w3-circle w3-margin-right\" style=\"width:55px\">";
             echo "<h4>" . $comments["FName"] . " " . $comments["MI"] . " " . $comments["LName"] . "</h4>";
             echo "</div>";
             echo "<!--Top of comments to change different background color-Keben-->";
