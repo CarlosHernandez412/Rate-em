@@ -158,11 +158,11 @@ function logout() {
             Landlords and renters will both be able to know who their tenants are and have an idea
             of what to expect from each other. Landlords are almost universally expected to run background
             checks and review a tenant's credit as part of the procedure, however only 37.6% always check
-            a tenant's criminal background and 38.7% check credit history <a href="Available: https://getflex.com/blog/landlord-statistics/">[1]</a>. 
+            a tenant's criminal background and 38.7% check credit history <a href="https://getflex.com/blog/landlord-statistics/">[1]</a>. 
             These checks should be done anyway,but shared reviews can help landlords have a better idea of who their renters are. Tenants, 
             on the other hand, can read landlord reviews to see how fair a landlord is based on previous tenants' experiences
             with that landlord, because 48.7% of landlords have asked tenants to leave suddenly or have raised
-            their monthly rent on occasion <a href="Available: https://getflex.com/blog/landlord-statistics/">[1]</a>.
+            their monthly rent on occasion <a href="https://getflex.com/blog/landlord-statistics/">[1]</a>.
           </h6>
           <br><br><br><br>
           <h3 class="txtcolor">Registered Users</h3>
