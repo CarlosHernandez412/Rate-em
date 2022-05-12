@@ -24,3 +24,8 @@ The most essential feature we have considered is a direct messaging system that 
 
 <h1 style="color: #236c93;">Our application</h1>
 IN PROGRESS...but you can still visit our site <a href="https://artemis.cs.csub.edu/~ecastaneda/rateem/views/home.php">here</a>
+View our project presentation and demo <a href="https://www.youtube.com/watch?v=uq8zKl6PT2g">here</a>
+
+<h1 style="color: #236c93;">For more information:</h1>
+Check out the '.Documents' directory.
+
